@@ -1,15 +1,10 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Threading;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     internal class TextInput
     {
         #region rConstants
 
-        int CHAR_LIMIT = 15;
+        int CHAR_LIMIT = 200;
         string CURSOR = "_";
 
         #endregion rConstants
@@ -140,13 +135,15 @@ namespace Plague_Pilgrim
                             return "back";
                         }
 
-                        if (IsUpperCase())
+                        bool isCapsOn = Keyboard.GetState().CapsLock;
+
+                        if (IsShiftPressed())
                         {
-                            return HandleShiftPress(keys);
+                            return isCapsOn ? HandleShiftPress(keys).ToLower() : HandleShiftPress(keys).ToString();
                         }
-                        else if (!IsUpperCase())
+                        else if (!IsShiftPressed())
                         {
-                            return key.ToString().ToLower();
+                            return isCapsOn ? key.ToString() : key.ToString().ToLower();
                         }
                     }
                     // Check for number key pressed
@@ -257,10 +254,9 @@ namespace Plague_Pilgrim
         /// Is shift or capslock pressed?
         /// </summary>
         /// <returns>True if capslock or shift keys are pressed</returns>
-        private bool IsUpperCase()
+        private bool IsShiftPressed()
         {
-            return Keyboard.GetState().CapsLock ||
-                   Keyboard.GetState().IsKeyDown(Keys.LeftShift) ||
+            return Keyboard.GetState().IsKeyDown(Keys.LeftShift) ||
                    Keyboard.GetState().IsKeyDown(Keys.RightShift);
         }
 
