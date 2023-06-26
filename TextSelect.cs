@@ -35,7 +35,7 @@ namespace Plague_Pilgrim
 
         #region rLoadContent
 
-        public void rLoadContent(ContentManager content)
+        public void LoadContent(ContentManager content)
         {
             mRoles.Add(Roles.Brother, "Brother");
             mRoles.Add(Roles.Sister, "Sister");
@@ -58,7 +58,7 @@ namespace Plague_Pilgrim
         {
             mPosition = pos;
             mCurrentText = mRoles[Roles.Brother];
-            mRoles.
+           
         }
 
         #endregion rInitialisation

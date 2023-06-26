@@ -41,7 +41,7 @@
             mPosition = pos;
 
             // Add male names
-            using (StreamReader reader = new StreamReader("Content/Names/males_names.txt"))
+            using (StreamReader reader = new StreamReader("Content/Names/male_names.txt"))
             {
                 string name;
                 while ((name = reader.ReadLine()) != null)
@@ -112,7 +112,7 @@
                 text = mCurrentText + CURSOR;
             }
 
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), text, mPosition, mColour); ;
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), text, mPosition, mColour);
         }
 
         #endregion rDraw
