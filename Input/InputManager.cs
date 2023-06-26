@@ -10,7 +10,8 @@
 
         // Menu controls
         Confirm,
-        Backspace
+        Backspace,
+        Randomise
     }
 
     /// <summary>
@@ -45,6 +46,7 @@
             // Menu controls
             mInputBindings.Add(Controls.Confirm, new InputBindSet(new KeyBinding(Keys.Space)));
             mInputBindings.Add(Controls.Backspace, new InputBindSet(new KeyBinding(Keys.Back)));
+            mInputBindings.Add(Controls.Randomise, new InputBindSet(new KeyBinding(Keys.Tab)));
         }
 
         #endregion rInititialisation

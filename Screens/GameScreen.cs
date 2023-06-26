@@ -8,6 +8,8 @@
         #region rMembers
 
         TextInput textInput;
+        
+        Role role;
    
         #endregion rMembers
 
@@ -32,6 +34,7 @@
         public override void LoadContent()
         {
            textInput = new TextInput(Vector2.Zero);
+           role = new Role("Brother", "Content/Descriptions/test_file.txt", 5);
         }
 
         #endregion rInitialisation
@@ -69,10 +72,11 @@
         public override RenderTarget2D DrawToRenderTarget(DrawInfo info)
         {
             info.device.SetRenderTarget(mScreenTarget);
-            info.device.Clear(Color.CornflowerBlue);
+            info.device.Clear(Color.Black);
 
             info.spriteBatch.Begin();
             textInput.Draw(info);
+            role.Draw(info);
             info.spriteBatch.End();
 
             return mScreenTarget;
