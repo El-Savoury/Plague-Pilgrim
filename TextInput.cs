@@ -16,11 +16,14 @@
         #region rMembers
 
         Vector2 mPosition;
+        Color mColour;
         string mCurrentText = string.Empty;
         bool mIsActive = true;
-        int mAddCounter = 3;
+        int mAddCounter = 2;
         int mRemoveCounter = 2;
+        List<String> mNames = new List<string>();
 
+        
         #endregion rMembers
 
 
@@ -36,6 +39,26 @@
         public TextInput(Vector2 pos)
         {
             mPosition = pos;
+
+            // Add male names
+            using (StreamReader reader = new StreamReader("Content/Names/males_names.txt"))
+            {
+                string name;
+                while ((name = reader.ReadLine()) != null)
+                {
+                    mNames.Add(name);
+                }
+            }
+
+            // Add female names
+            using (StreamReader reader = new StreamReader("Content/Names/female_names.txt"))
+            {
+                string name;
+                while ((name = reader.ReadLine()) != null)
+                {
+                    mNames.Add(name);
+                }
+            }
         }
 
         #endregion rInitialisation
@@ -48,6 +71,9 @@
 
         public void Update()
         {
+            RandomiseName();
+            mColour = mIsActive ? Color.White : Color.Gray;
+
             if (InputManager.KeyPressed(Controls.Up)) { ToggleActive(); }
 
             if (mIsActive)
@@ -65,6 +91,8 @@
                 }
             }
         }
+
+
 
         #endregion rUpdate
 
@@ -84,7 +112,7 @@
                 text = mCurrentText + CURSOR;
             }
 
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), text, mPosition, Color.White); ;
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), text, mPosition, mColour); ;
         }
 
         #endregion rDraw
@@ -96,6 +124,14 @@
 
         #region rUtility
 
+        private void RandomiseName()
+        {
+            if (InputManager.KeyReleased(Controls.Randomise))
+            {
+                Random rand = new Random();
+                mCurrentText = mNames[rand.Next(0, mNames.Count)];
+            }
+        }
 
         private void ToggleActive()
         {
@@ -183,9 +219,9 @@
         {
             if (mAddCounter == 0)
             {
-                mAddCounter = 3;
+                mAddCounter = 2;
             }
-            else if (mAddCounter == 3)
+            else if (mAddCounter == 2)
             {
                 mCurrentText += letter;
                 mAddCounter--;
