@@ -7,10 +7,11 @@
     {
         #region rMembers
 
-        TextInput textInput;
-        
-        Role role;
-   
+        RoleManager mRoleManager = new RoleManager();
+        TextSelect mRoleSelector;
+        TextInput mNameInput;
+
+
         #endregion rMembers
 
 
@@ -30,11 +31,12 @@
 
         /// <summary>
         /// Load content required for gameplay
-        /// </summary>s
+        /// </summary>
         public override void LoadContent()
         {
-           textInput = new TextInput(Vector2.Zero);
-           role = new Role("Brother", "Content/Descriptions/test_file.txt", 5);
+            mRoleManager.LoadContent();
+            mRoleSelector = new TextSelect(Vector2.Zero, mRoleManager.GetTitles());
+            mNameInput = new TextInput(new Vector2(120, 0));
         }
 
         #endregion rInitialisation
@@ -52,7 +54,8 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            textInput.Update();
+            mNameInput.Update();
+            mRoleSelector.Update();
         }
 
         #endregion rUpdate
@@ -75,8 +78,10 @@
             info.device.Clear(Color.Black);
 
             info.spriteBatch.Begin();
-            textInput.Draw(info);
-            role.Draw(info);
+
+            mNameInput.Draw(info);
+            mRoleSelector.Draw(info);
+
             info.spriteBatch.End();
 
             return mScreenTarget;

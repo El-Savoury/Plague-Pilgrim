@@ -19,11 +19,11 @@
         Color mColour;
         string mCurrentText = string.Empty;
         bool mIsActive = true;
-        int mAddCounter = 2;
+        int mAddCounter = 3;
         int mRemoveCounter = 2;
-        List<String> mNames = new List<string>();
+        List<string> mNames = new List<string>();
 
-        
+
         #endregion rMembers
 
 
@@ -129,7 +129,11 @@
             if (InputManager.KeyReleased(Controls.Randomise))
             {
                 Random rand = new Random();
-                mCurrentText = mNames[rand.Next(0, mNames.Count)];
+
+                if (mNames != null)
+                {
+                    mCurrentText = mNames[rand.Next(0, mNames.Count)];
+                }
             }
         }
 
@@ -194,20 +198,17 @@
 
 
         /// <summary>
-        /// When shift is pressed returns the next pressed key as a captial letter
+        /// When shift is pressed returns the next pressed key as a capital letter
         /// </summary>
         /// <param name="keys"></param>
         /// <returns>Upper or lower case string</returns>
         private string HandleShiftPress(Keys[] keys)
         {
-            if (keys.Length > 2 && keys.Length < 3) //Check if shift and only 1 key is pressed? 
+            if (keys.Length > 2) //Check if shift and only 1 key is pressed? 
             {
                 return keys[1].ToString();
             }
-            else
-            {
-                return keys[0].ToString();
-            }
+            return keys[0].ToString();
         }
 
 
@@ -219,16 +220,16 @@
         {
             if (mAddCounter == 0)
             {
-                mAddCounter = 2;
+                mAddCounter = 3;
             }
-            else if (mAddCounter == 2)
+            else if (mAddCounter == 3)
             {
                 mCurrentText += letter;
                 mAddCounter--;
             }
             else
             {
-                mAddCounter--;
+                mAddCounter = 0;
             }
         }
 
@@ -250,7 +251,7 @@
                 }
                 else
                 {
-                    mRemoveCounter--;
+                    mRemoveCounter = 0;
                 }
             }
         }
