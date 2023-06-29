@@ -1,6 +1,9 @@
 ﻿namespace Plague_Pilgrim
 {
-    internal class TextInput
+    /// <summary>
+    /// Text box that lets player type to input text
+    /// </summary>
+    internal class TextInput : TextBox
     {
         #region rConstants
 
@@ -15,7 +18,6 @@
 
         #region rMembers
 
-        Vector2 mPosition;
         Color mColour;
         string mCurrentText = string.Empty;
         bool mIsActive = true;
@@ -36,7 +38,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public TextInput(Vector2 pos)
+        public TextInput(Vector2 pos, Vector2 size) : base(pos, size)
         {
             mPosition = pos;
 
@@ -69,6 +71,9 @@
 
         #region rUpdate
 
+        /// <summary>
+        /// Update text input
+        /// </summary>
         public void Update()
         {
             RandomiseName();
@@ -103,7 +108,11 @@
 
         #region rDraw
 
-        public void Draw(DrawInfo info)
+        /// <summary>
+        /// Draw current text
+        /// </summary>
+        /// <param name="info">Info needed by Monogame to draw</param>
+        public override void Draw(DrawInfo info)
         {
             string text = mCurrentText;
 
@@ -124,9 +133,12 @@
 
         #region rUtility
 
+        /// <summary>
+        /// Gets a name at random from name list
+        /// </summary>
         private void RandomiseName()
         {
-            if (InputManager.KeyReleased(Controls.Randomise))
+            if (InputManager.KeyPressed(Controls.Randomise))
             {
                 Random rand = new Random();
 
@@ -137,25 +149,20 @@
             }
         }
 
+
+        /// <summary>
+        /// Toggles the text input box between active and inactive
+        /// </summary>
         private void ToggleActive()
         {
             mIsActive = !mIsActive;
         }
 
-        /// <summary>
-        /// Sets whether text input is active or not
-        /// </summary>
-        /// <param name="active">True to activate, false to deactivate</param>
-        public void SetActive(bool active)
-        {
-            mIsActive = active;
-        }
-
 
         /// <summary>
-        /// Returns a key value only if it's a letter or number to avoid returning shift or capslock
+        /// Returns the currently pressed key as a string
         /// </summary
-        /// <returns>char or int value of key</returns>
+        /// <returns>String value of key</returns>
         private string GetKeyAsString(Keys[] keys)
         {
             if (keys.Length != 0)
@@ -175,11 +182,12 @@
                             return "back";
                         }
 
+                        // Handle capslock and shift keys for capital letters
                         bool isCapsOn = Keyboard.GetState().CapsLock;
 
                         if (IsShiftPressed())
                         {
-                            return isCapsOn ? HandleShiftPress(keys).ToLower() : HandleShiftPress(keys).ToString();
+                            return isCapsOn ? GetSecondKeyPress(keys).ToLower() : GetSecondKeyPress(keys).ToString();
                         }
                         else if (!IsShiftPressed())
                         {
@@ -198,11 +206,11 @@
 
 
         /// <summary>
-        /// When shift is pressed returns the next pressed key as a capital letter
+        /// When more than one key is pressed return the key that was pressed second to account for shift presses
         /// </summary>
         /// <param name="keys"></param>
-        /// <returns>Upper or lower case string</returns>
-        private string HandleShiftPress(Keys[] keys)
+        /// <returns>Key at 2nd index of pressed keys array</returns>
+        private string GetSecondKeyPress(Keys[] keys)
         {
             if (keys.Length > 2) //Check if shift and only 1 key is pressed? 
             {
@@ -215,7 +223,7 @@
         /// <summary>
         /// Adds a letter to current text
         /// </summary>
-        /// <param name="letter"></param>
+        /// <param name="letter">Letter string to add</param>
         private void AddText(string letter)
         {
             if (mAddCounter == 0)

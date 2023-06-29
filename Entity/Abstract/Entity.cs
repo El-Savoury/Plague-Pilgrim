@@ -60,7 +60,7 @@
         /// <param name="entity"></param>
         public virtual void CollideWithEntity(Entity entity)
         {
-            // Default: Do nothing.
+            // Default: Do nothing
         }
 
         #endregion rUpdate
@@ -135,7 +135,7 @@
         /// <summary>
         /// Is this entity enabled?
         /// </summary>
-        /// <returns></returns>
+        /// <returns>True if enabled</returns>
         public bool IsEnabled()
         {
             return mEnabled;

@@ -1,9 +1,11 @@
+using System.Reflection.PortableExecutable;
+
 namespace Plague_Pilgrim
 {
     /// <summary>
     /// Text that lets the player select an option
     /// </summary>
-    internal class TextSelect
+    internal class TextSelect : TextBox
     {
         #region rConstants
 
@@ -15,7 +17,6 @@ namespace Plague_Pilgrim
 
         #region rMembers
 
-        Vector2 mPosition;
         string mCurrentText = string.Empty;
         string[] mText;
         bool mIsActive = true;
@@ -34,9 +35,8 @@ namespace Plague_Pilgrim
         /// <summary>
         /// Constructor
         /// </summary>
-        public TextSelect(Vector2 pos, string[] text)
+        public TextSelect(Vector2 pos, Vector2 size, string[] text) : base(pos, size)
         {
-            mPosition = pos;
             mText = text;
         }
 
@@ -48,6 +48,9 @@ namespace Plague_Pilgrim
 
         #region rUpdate
 
+        /// <summary>
+        /// Update text select box
+        /// </summary>
         public void Update()
         {
             mColour = mIsActive ? Color.White : Color.Gray;
@@ -67,7 +70,11 @@ namespace Plague_Pilgrim
 
         #region rDraw
 
-        public void Draw(DrawInfo info)
+        /// <summary>
+        /// Draw text select box
+        /// </summary>
+        /// <param name="info">Info needed by monogame to draw</param>
+        public override void Draw(DrawInfo info)
         {
             Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour); ;
         }
@@ -85,16 +92,6 @@ namespace Plague_Pilgrim
         private void ToggleActive()
         {
             mIsActive = !mIsActive;
-        }
-
-
-        /// <summary>
-        /// Sets whether text input is active or not
-        /// </summary>
-        /// <param name="active">True to activate, false to deactivate</param>
-        public void SetActive(bool active)
-        {
-            mIsActive = active;
         }
 
 

@@ -11,7 +11,6 @@
         TextSelect mRoleSelector;
         TextInput mNameInput;
 
-
         #endregion rMembers
 
 
@@ -35,8 +34,8 @@
         public override void LoadContent()
         {
             mRoleManager.LoadContent();
-            mRoleSelector = new TextSelect(Vector2.Zero, mRoleManager.GetTitles());
-            mNameInput = new TextInput(new Vector2(120, 0));
+            mRoleSelector = new TextSelect(Vector2.Zero, Vector2.Zero, mRoleManager.GetTitles());
+            mNameInput = new TextInput(new Vector2(120, 0), Vector2.Zero);
         }
 
         #endregion rInitialisation
