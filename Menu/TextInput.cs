@@ -1,4 +1,8 @@
-﻿namespace Plague_Pilgrim
+﻿using Microsoft.Xna.Framework.Input;
+using System.ComponentModel.Design;
+using System.Linq;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Text box that lets player type to input text
@@ -7,7 +11,7 @@
     {
         #region rConstants
 
-        int CHAR_LIMIT = 200;
+        int CHAR_LIMIT = 12;
         string CURSOR = "_";
 
         #endregion rConstants
@@ -21,10 +25,9 @@
         Color mColour;
         string mCurrentText = string.Empty;
         bool mIsActive = true;
-        int mAddCounter = 3;
         int mRemoveCounter = 2;
+        Keys[] mLastPressedKeys = new Keys[2];
         List<string> mNames = new List<string>();
-
 
         #endregion rMembers
 
@@ -83,21 +86,9 @@
 
             if (mIsActive)
             {
-                Keys[] keys = Keyboard.GetState().GetPressedKeys();
-                string currentKey = GetKeyAsString(keys);
-
-                if (currentKey == "back")
-                {
-                    RemoveText();
-                }
-                else if (!IsOverCharLimit())
-                {
-                    AddText(currentKey);
-                }
+                HandlePressedKeys();
             }
         }
-
-
 
         #endregion rUpdate
 
@@ -131,6 +122,8 @@
 
 
 
+
+
         #region rUtility
 
         /// <summary>
@@ -158,88 +151,6 @@
             mIsActive = !mIsActive;
         }
 
-
-        /// <summary>
-        /// Returns the currently pressed key as a string
-        /// </summary
-        /// <returns>String value of key</returns>
-        private string GetKeyAsString(Keys[] keys)
-        {
-            if (keys.Length != 0)
-            {
-                foreach (Keys key in keys)
-                {
-                    // Check for letter key pressed
-                    if (IsLetterPressed(key))
-                    {
-                        if (key == Keys.Space)
-                        {
-                            return " ";
-                        }
-
-                        if (key == Keys.Back)
-                        {
-                            return "back";
-                        }
-
-                        // Handle capslock and shift keys for capital letters
-                        bool isCapsOn = Keyboard.GetState().CapsLock;
-
-                        if (IsShiftPressed())
-                        {
-                            return isCapsOn ? GetSecondKeyPress(keys).ToLower() : GetSecondKeyPress(keys).ToString();
-                        }
-                        else if (!IsShiftPressed())
-                        {
-                            return isCapsOn ? key.ToString() : key.ToString().ToLower();
-                        }
-                    }
-                    // Check for number key pressed
-                    else if (IsNumberPressed(key))
-                    {
-                        return key.ToString().Substring(1); // Remove 'D' from start of number string.
-                    }
-                }
-            }
-            return string.Empty;
-        }
-
-
-        /// <summary>
-        /// When more than one key is pressed return the key that was pressed second to account for shift presses
-        /// </summary>
-        /// <param name="keys"></param>
-        /// <returns>Key at 2nd index of pressed keys array</returns>
-        private string GetSecondKeyPress(Keys[] keys)
-        {
-            if (keys.Length > 2) //Check if shift and only 1 key is pressed? 
-            {
-                return keys[1].ToString();
-            }
-            return keys[0].ToString();
-        }
-
-
-        /// <summary>
-        /// Adds a letter to current text
-        /// </summary>
-        /// <param name="letter">Letter string to add</param>
-        private void AddText(string letter)
-        {
-            if (mAddCounter == 0)
-            {
-                mAddCounter = 3;
-            }
-            else if (mAddCounter == 3)
-            {
-                mCurrentText += letter;
-                mAddCounter--;
-            }
-            else
-            {
-                mAddCounter = 0;
-            }
-        }
 
         /// <summary>
         /// Removes the last letter of current text
@@ -296,13 +207,81 @@
 
 
         /// <summary>
-        /// Is shift or capslock pressed?
+        /// Is either shift key pressed?
         /// </summary>
         /// <returns>True if capslock or shift keys are pressed</returns>
         private bool IsShiftPressed()
         {
-            return Keyboard.GetState().IsKeyDown(Keys.LeftShift) ||
-                   Keyboard.GetState().IsKeyDown(Keys.RightShift);
+            return mLastPressedKeys.Contains(Keys.LeftShift) ||
+                   mLastPressedKeys.Contains(Keys.RightShift);
+        }
+
+
+        private void HandlePressedKeys()
+        {
+            Keys[] pressedKeys = Keyboard.GetState().GetPressedKeys();
+
+            // Check for new key press
+            foreach (Keys key in pressedKeys)
+            {
+                if (key == Keys.Back)
+                {
+                    RemoveText();
+                }
+                else if (!mLastPressedKeys.Contains(key) && !IsOverCharLimit())
+                {
+                    if (IsLetterPressed(key))
+                    {
+                        AddLetter(key);
+                    }
+                    else if (IsNumberPressed(key))
+                    {
+                        AddNumber(key);
+                    }
+                }
+            }
+
+            mLastPressedKeys = pressedKeys;
+        }
+
+
+        /// <summary>
+        /// Converts Key letter value to string and adds it to current text
+        /// </summary>
+        /// <param name="key">Keyboard key pressed by player</param>
+        private void AddLetter(Keys key)
+        {
+            string letter = key.ToString();
+
+            // Handle space bar press
+            if (key == Keys.Space)
+            {
+                letter = " ";
+            }
+
+            // Handle capslock and shift keys for capital letters
+            bool isCapsOn = Keyboard.GetState().CapsLock;
+
+            if (IsShiftPressed())
+            {
+                letter = isCapsOn ? letter.ToLower() : letter;
+            }
+            else if (!IsShiftPressed())
+            {
+                letter = isCapsOn ? letter : letter.ToLower();
+            }
+
+            mCurrentText += letter;
+        }
+
+
+        /// <summary>
+        ///  Converts Key number value to string and adds it to current text
+        /// </summary>
+        /// <param name="key"></param>
+        private void AddNumber(Keys key)
+        {
+            mCurrentText += key.ToString().Substring(1); // Remove 'd' from number string 
         }
 
         #endregion rUtility
