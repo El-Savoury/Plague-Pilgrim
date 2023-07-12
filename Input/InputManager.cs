@@ -36,7 +36,6 @@
         /// </summary>
         public static void SetDefaultBindings()
         {
-
             // Arrow Keys
             mInputBindings.Add(Controls.Left, new InputBindSet(new KeyBinding(Keys.Left)));
             mInputBindings.Add(Controls.Right, new InputBindSet(new KeyBinding(Keys.Right)));

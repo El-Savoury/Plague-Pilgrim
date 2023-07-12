@@ -14,6 +14,9 @@
 
         #region rLoadContent
 
+        /// <summary>
+        /// Loads a list of roles
+        /// </summary>
         public void LoadContent()
         {
             mRoles = new Role[]
@@ -34,6 +37,10 @@
 
         #region rUtility
 
+        /// <summary>
+        /// Gets an array containing the titles of all roles
+        /// </summary>
+        /// <returns>Array of role titles</returns>
         public string[] GetTitles()
         {
             List<string> titles = new List<string>();

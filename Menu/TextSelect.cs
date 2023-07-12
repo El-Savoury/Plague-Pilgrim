@@ -3,24 +3,13 @@ using System.Reflection.PortableExecutable;
 namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Text that lets the player select an option
+    /// Text box that lets the player select an option
     /// </summary>
-    internal class TextSelect : TextBox
+    class TextSelect : UIElement
     {
-        #region rConstants
-
-        #endregion rConstants
-
-
-
-
-
         #region rMembers
 
-        string mCurrentText = string.Empty;
         string[] mText;
-        bool mIsActive = true;
-        Color mColour;
 
         #endregion rMembers
 
@@ -51,11 +40,9 @@ namespace Plague_Pilgrim
         /// <summary>
         /// Update text select box
         /// </summary>
-        public void Update()
+        public override void Update()
         {
-            mColour = mIsActive ? Color.White : Color.Gray;
-
-            if (mIsActive)
+            if (mActive)
             {
                 ChangeSelection();
             }
@@ -76,7 +63,7 @@ namespace Plague_Pilgrim
         /// <param name="info">Info needed by monogame to draw</param>
         public override void Draw(DrawInfo info)
         {
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour); ;
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour);
         }
 
         #endregion rDraw
@@ -91,7 +78,7 @@ namespace Plague_Pilgrim
 
         private void ToggleActive()
         {
-            mIsActive = !mIsActive;
+            mActive = !mActive;
         }
 
 

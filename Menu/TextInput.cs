@@ -1,19 +1,15 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System.ComponentModel.Design;
-using System.Linq;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Text box that lets player type to input text
     /// </summary>
-    internal class TextInput : TextBox
+    class TextInput : UIElement
     {
         #region rConstants
 
-        int CHAR_LIMIT = 12;
         string CURSOR = "_";
-
+        int CHAR_LIMIT = 12;
+     
         #endregion rConstants
 
 
@@ -22,12 +18,9 @@ namespace Plague_Pilgrim
 
         #region rMembers
 
-        Color mColour;
-        string mCurrentText = string.Empty;
-        bool mIsActive = true;
-        int mRemoveCounter = 2;
         Keys[] mLastPressedKeys = new Keys[2];
         List<string> mNames = new List<string>();
+        int mRemoveCounter = 2;
 
         #endregion rMembers
 
@@ -77,16 +70,14 @@ namespace Plague_Pilgrim
         /// <summary>
         /// Update text input
         /// </summary>
-        public void Update()
+        public override void Update()
         {
-            RandomiseName();
-            mColour = mIsActive ? Color.White : Color.Gray;
-
             if (InputManager.KeyPressed(Controls.Up)) { ToggleActive(); }
 
-            if (mIsActive)
+            if (mActive)
             {
                 HandlePressedKeys();
+                RandomiseName();
             }
         }
 
@@ -107,7 +98,7 @@ namespace Plague_Pilgrim
         {
             string text = mCurrentText;
 
-            if (mIsActive && !IsOverCharLimit())
+            if (mActive && !IsOverCharLimit())
             {
                 text = mCurrentText + CURSOR;
             }
@@ -137,7 +128,7 @@ namespace Plague_Pilgrim
 
                 if (mNames != null)
                 {
-                    mCurrentText = mNames[rand.Next(0, mNames.Count)];
+                        mCurrentText = mNames[rand.Next(0, mNames.Count)];
                 }
             }
         }
@@ -148,7 +139,7 @@ namespace Plague_Pilgrim
         /// </summary>
         private void ToggleActive()
         {
-            mIsActive = !mIsActive;
+            mActive = !mActive;
         }
 
 
