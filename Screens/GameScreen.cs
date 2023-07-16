@@ -7,9 +7,7 @@
     {
         #region rMembers
 
-        RoleManager mRoleManager = new RoleManager();
-        TextSelect mRoleSelector;
-        TextInput mNameInput;
+        CreationMenu mCreationMenu;
 
         #endregion rMembers
 
@@ -26,6 +24,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
+            mCreationMenu = new CreationMenu();
         }
 
         /// <summary>
@@ -33,9 +32,7 @@
         /// </summary>
         public override void LoadContent()
         {
-            mRoleManager.LoadContent();
-            mRoleSelector = new TextSelect(Vector2.Zero, Vector2.Zero, mRoleManager.GetTitles());
-            mNameInput = new TextInput(new Vector2(120, 0), Vector2.Zero);
+            mCreationMenu.LoadContent();
         }
 
         #endregion rInitialisation
@@ -53,8 +50,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mNameInput.Update();
-            mRoleSelector.Update();
+            mCreationMenu.Update();
         }
 
         #endregion rUpdate
@@ -78,8 +74,7 @@
 
             info.spriteBatch.Begin();
 
-            mNameInput.Draw(info);
-            mRoleSelector.Draw(info);
+            mCreationMenu.Draw(info);
 
             info.spriteBatch.End();
 
