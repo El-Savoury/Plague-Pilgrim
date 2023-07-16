@@ -1,6 +1,6 @@
 ﻿namespace Plague_Pilgrim
 {
-    internal class TextBox : UIElement
+    internal class TextBox : UIObject
     {
         #region rMembers
 

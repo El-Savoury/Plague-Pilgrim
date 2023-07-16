@@ -1,9 +1,11 @@
-﻿namespace Plague_Pilgrim
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Represents a UI element containing text
     /// </summary>
-    abstract class UIElement
+    abstract class UIObject
     {
         #region rMembers
 
@@ -23,13 +25,14 @@
 
         #region rInitialisation
 
-        public UIElement(Vector2 pos, Vector2 size)
+        public UIObject(Vector2 pos, Vector2 size)
         {
             mPosition = pos;
             mSize = size;
             mCurrentText = string.Empty;
             mEnabled = true;
-            mActive = false;
+            mActive = true;
+            mColour = mActive ? Color.White : Color.Gray;
         }
 
         #endregion rInitialisation
@@ -46,10 +49,7 @@
         /// </summary>
         public virtual void Update()
         {
-            if (mEnabled)
-            {
-                mColour = mActive ? Color.White : Color.Gray;
-            }
+            mColour = mActive ? Color.White : Color.Gray;
         }
 
         #endregion rUpdate
@@ -64,8 +64,11 @@
         /// <summary>
         /// Draw entity
         /// </summary>
-        public abstract void Draw(DrawInfo info);
-       
+        public virtual void Draw(DrawInfo info)
+        {
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour);
+        }
+
         #endregion rDraw
 
 

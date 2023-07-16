@@ -3,13 +3,13 @@
     /// <summary>
     /// Text box that lets player type to input text
     /// </summary>
-    class TextInput : UIElement
+    class TextInput : UIObject
     {
         #region rConstants
 
         string CURSOR = "_";
         int CHAR_LIMIT = 12;
-     
+
         #endregion rConstants
 
 
@@ -79,6 +79,8 @@
                 HandlePressedKeys();
                 RandomiseName();
             }
+
+            base.Update();
         }
 
         #endregion rUpdate
@@ -128,7 +130,7 @@
 
                 if (mNames != null)
                 {
-                        mCurrentText = mNames[rand.Next(0, mNames.Count)];
+                    mCurrentText = mNames[rand.Next(0, mNames.Count)];
                 }
             }
         }

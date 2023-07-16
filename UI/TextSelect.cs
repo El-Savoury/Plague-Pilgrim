@@ -5,7 +5,7 @@ namespace Plague_Pilgrim
     /// <summary>
     /// Text box that lets the player select an option
     /// </summary>
-    class TextSelect : UIElement
+    class TextSelect : UIObject
     {
         #region rMembers
 
@@ -46,27 +46,13 @@ namespace Plague_Pilgrim
             {
                 ChangeSelection();
             }
+
+            base.Update();
         }
 
         #endregion rUpdate
 
 
-
-
-
-
-        #region rDraw
-
-        /// <summary>
-        /// Draw text select box
-        /// </summary>
-        /// <param name="info">Info needed by monogame to draw</param>
-        public override void Draw(DrawInfo info)
-        {
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour);
-        }
-
-        #endregion rDraw
 
 
 
