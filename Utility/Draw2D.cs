@@ -22,9 +22,9 @@
         /// <summary>
         /// Draw a texture at a position
         /// </summary>
-        public static void DrawTexture(DrawInfo info, Texture2D texture2D, Vector2 position)
+        public static void DrawTexture(DrawInfo info, Texture2D texture, Vector2 position)
         {
-            info.spriteBatch.Draw(texture2D, position, Color.White);
+            info.spriteBatch.Draw(texture, position, Color.White);
         }
 
 
@@ -44,7 +44,7 @@
         {
             Vector2 size = font.MeasureString(text);
 
-            info.spriteBatch.DrawString(font, text, pos - size / 2, colour); 
+            info.spriteBatch.DrawString(font, text, pos - size / 2, colour);
         }
 
 
@@ -54,6 +54,15 @@
         public static void DrawRect(DrawInfo info, Rectangle rect, Color col)
         {
             info.spriteBatch.Draw(Main.GetDummyTexture(), rect, col);
+        }
+
+
+        /// <summary>
+        /// Draw a segment of a sprite
+        /// </summary>
+        public static void DrawPartialSprite(DrawInfo info, Texture2D texture, Vector2 pos, Vector2 sourceFrame, Vector2 frameSize, Color col)
+        {
+            info.spriteBatch.Draw(texture, pos, new Rectangle(new Point((int)sourceFrame.X, (int)sourceFrame.Y), new Point((int)frameSize.X, (int)frameSize.Y)), col);
         }
 
         #endregion rRender

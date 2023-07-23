@@ -1,10 +1,13 @@
 ﻿namespace Plague_Pilgrim
 {
-    internal class TitleScreen : Screen
+    /// <summary>
+    /// Gameplay screen
+    /// </summary>
+    internal class GameplayScreen : Screen
     {
         #region rMembers
 
-
+       
 
         #endregion rMembers
 
@@ -16,20 +19,20 @@
         #region rInitialisation
 
         /// <summary>
-        /// Title screen constructor.
+        /// Game screen constructor
         /// </summary>
         /// <param name="graphics">Graphics device</param>
-        public TitleScreen(GraphicsDeviceManager graphics) : base(graphics)
+        public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
+           
         }
 
-
         /// <summary>
-        /// Load content required for title screen.
+        /// Load content required for gameplay
         /// </summary>
         public override void LoadContent()
         {
-
+            
         }
 
         #endregion rInitialisation
@@ -41,12 +44,13 @@
 
         #region rUpdate
 
+        /// <summary>
+        /// Update game screen
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            if (InputManager.KeyPressed(Controls.Confirm))
-            {
-                ScreenManager.ActivateScreen(ScreenType.Gameplay);
-            }
+           
         }
 
         #endregion rUpdate
@@ -55,20 +59,22 @@
 
 
 
+
         #region rDraw
 
+        /// <summary>
+        /// Draw game screen to render target
+        /// </summary>
+        /// <param name="info">Info needed to draw</param>
+        /// <returns>Render target with game screen drawn on it</returns>
         public override RenderTarget2D DrawToRenderTarget(DrawInfo info)
         {
             info.device.SetRenderTarget(mScreenTarget);
-            info.device.Clear(Color.CornflowerBlue);
+            info.device.Clear(Color.Black);
 
-            info.spriteBatch.Begin(SpriteSortMode.FrontToBack,
-                                  BlendState.AlphaBlend,
-                                  SamplerState.PointClamp,
-                                  DepthStencilState.Default,
-                                  RasterizerState.CullNone);
+            info.spriteBatch.Begin();
 
-            // TODO: DRAW TITLE SCREEN 
+            
 
             info.spriteBatch.End();
 
@@ -76,5 +82,15 @@
         }
 
         #endregion rDraw
+
+
+
+
+
+
+
+        #region rUtility
+
+        #endregion rUtility
     }
 }

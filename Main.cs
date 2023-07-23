@@ -81,7 +81,7 @@
 
             FontManager.LoadAllFonts(Content);
             ScreenManager.LoadAllScreens(mGraphics);
-            ScreenManager.ActivateScreen(ScreenType.Game);
+            ScreenManager.ActivateScreen(ScreenType.NewGame);
         }
         #endregion rInitialisation
 

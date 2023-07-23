@@ -6,7 +6,8 @@
     enum ScreenType
     {
         Title,
-        Game,
+        NewGame,
+        Gameplay,
         None
     }
 
@@ -38,7 +39,8 @@
             mScreens.Clear();
 
             LoadScreen(ScreenType.Title, new TitleScreen(deviceManager));
-            LoadScreen(ScreenType.Game, new GameScreen(deviceManager));
+            LoadScreen(ScreenType.NewGame, new NewGameScreen(deviceManager));
+            LoadScreen(ScreenType.Gameplay, new GameplayScreen(deviceManager));
         }
 
 

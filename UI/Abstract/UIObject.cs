@@ -1,19 +1,31 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Represents a UI element containing text
     /// </summary>
     abstract class UIObject
     {
+        #region rConstants
+
+        const int PATCH_SIZE = 8;
+
+        #endregion rConstants
+
+
+
+
+
         #region rMembers
 
+        protected bool mEnabled = true; // Disabled entities will not be drawn or updated
+        protected bool mActive = true; // Inactive objects are visible but don't take input from player
+
         protected Vector2 mPosition;
-        protected Vector2 mSize;
-        protected string mCurrentText;
-        protected bool mEnabled; // Disabled entities will not be drawn or updated
-        protected bool mActive; // Inactive objects are visible but don't take input from player
+        protected Vector2 mCellSize = Vector2.Zero;
+        protected Point mCellPadding = new Point(2, 0);
+        private Vector2 mSizeInPatches = Vector2.Zero;
+
+        protected string mCurrentText = string.Empty;
         protected Color mColour;
 
         #endregion rMembers
@@ -28,10 +40,7 @@ namespace Plague_Pilgrim
         public UIObject(Vector2 pos, Vector2 size)
         {
             mPosition = pos;
-            mSize = size;
-            mCurrentText = string.Empty;
-            mEnabled = true;
-            mActive = true;
+            mCellSize = GetCellSize();
             mColour = mActive ? Color.White : Color.Gray;
         }
 
@@ -115,6 +124,61 @@ namespace Plague_Pilgrim
         public bool IsEnabled()
         {
             return mEnabled;
+        }
+
+
+        /// <summary>
+        /// Get the size required to display the text within this UIObject
+        /// </summary>
+        /// <returns>Size of string in pixels</returns>
+        public Vector2 GetTextSize()
+        {
+            return (FontManager.GetFont("monogram").MeasureString(mCurrentText));
+        }
+
+
+        /// <summary>
+        /// Returns size of UIObject cell
+        /// </summary>
+        /// <returns></returns>
+        public Vector2 GetCellSize()
+        {
+            return new Vector2(Math.Max(GetTextSize().X, mCellSize.X),
+                               Math.Max(GetTextSize().Y, mCellSize.Y));
+        }
+
+
+        /// <summary>
+        /// Get necessary size of background panel in patches
+        /// </summary>
+        public Vector2 GetPanelSize()
+        {
+            return new Vector2(mCellSize.X + mCellSize.X, mCellSize.Y + mCellSize.Y);
+        }
+
+
+        public void DrawPanel(DrawInfo info)
+        {
+            Vector2 patchPos = Vector2.Zero;
+
+            for (int x = 0; x < mSizeInPatches.X; x++)
+            {
+                for (int y = 0; y < mSizeInPatches.Y; y++)
+                {
+                    // Determine screen position
+                    Vector2 screenPos = patchPos * PATCH_SIZE + mPosition;
+
+                    // Calculate which patch of sprite is needed
+                    Vector2 sourcePatch = Vector2.Zero;
+
+                    if (patchPos.X > 0) { sourcePatch.X = 1; }
+                    if (patchPos.X == mSizeInPatches.X - 1) { sourcePatch.X = 2; }
+                    if (patchPos.Y > 0) { sourcePatch.Y = 1; }
+                    if (patchPos.Y == mSizeInPatches.Y - 1) { sourcePatch.Y = 2; }
+
+                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), screenPos, sourcePatch, new Vector2(PATCH_SIZE, PATCH_SIZE), Color.White);
+                }
+            }
         }
 
         #endregion rUtility

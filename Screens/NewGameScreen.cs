@@ -1,13 +1,15 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Gameplay screen
+    /// New game menu screen
     /// </summary>
-    internal class GameScreen : Screen
+    internal class NewGameScreen : Screen
     {
         #region rMembers
 
-        CreationMenu mCreationMenu;
+        RoleManager mRoleManager;
+        List<UIObject> mNameInputs = new List<UIObject>();
+        List<UIObject> mRoleSelects = new List<UIObject>();
 
         #endregion rMembers
 
@@ -22,9 +24,9 @@
         /// Game screen constructor
         /// </summary>
         /// <param name="graphics">Graphics device</param>
-        public GameScreen(GraphicsDeviceManager graphics) : base(graphics)
+        public NewGameScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            mCreationMenu = new CreationMenu();
+            mRoleManager = new RoleManager();
         }
 
         /// <summary>
@@ -32,7 +34,17 @@
         /// </summary>
         public override void LoadContent()
         {
-            mCreationMenu.LoadContent();
+            mRoleManager.LoadContent();
+
+            mRoleSelects.Add(new TextSelect(Vector2.Zero, Vector2.Zero, mRoleManager.GetTitles()));
+            mRoleSelects.Add(new TextSelect(new Vector2(0, 50), Vector2.Zero, mRoleManager.GetTitles()));
+            mRoleSelects.Add(new TextSelect(new Vector2(0, 100), Vector2.Zero, mRoleManager.GetTitles()));
+            mRoleSelects.Add(new TextSelect(new Vector2(0, 150), Vector2.Zero, mRoleManager.GetTitles()));
+
+            mNameInputs.Add(new TextInput(new Vector2(120, 0), Vector2.Zero));
+            mNameInputs.Add(new TextInput(new Vector2(120, 50), Vector2.Zero));
+            mNameInputs.Add(new TextInput(new Vector2(120, 100), Vector2.Zero));
+            mNameInputs.Add(new TextInput(new Vector2(120, 150), Vector2.Zero));
         }
 
         #endregion rInitialisation
@@ -50,7 +62,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mCreationMenu.Update();
+            mRoleSelects[0].Update();
         }
 
         #endregion rUpdate
@@ -74,7 +86,8 @@
 
             info.spriteBatch.Begin();
 
-            mCreationMenu.Draw(info);
+            mRoleSelects[0].Draw(info);
+            mRoleSelects[0].DrawPanel(info);
 
             info.spriteBatch.End();
 
@@ -94,3 +107,4 @@
         #endregion rUtility
     }
 }
+
