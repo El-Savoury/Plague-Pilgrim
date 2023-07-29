@@ -22,7 +22,7 @@
 
         protected Vector2 mPosition;
         protected Vector2 mCellSize = Vector2.Zero;
-        protected Point mCellPadding = new Point(2, 0);
+        protected Point mCellPadding = new Point(2, 0); // Space between multiple cells
         private Vector2 mSizeInPatches = Vector2.Zero;
 
         protected string mCurrentText = string.Empty;
@@ -40,7 +40,6 @@
         public UIObject(Vector2 pos, Vector2 size)
         {
             mPosition = pos;
-            mCellSize = GetCellSize();
             mColour = mActive ? Color.White : Color.Gray;
         }
 
@@ -59,6 +58,8 @@
         public virtual void Update()
         {
             mColour = mActive ? Color.White : Color.Gray;
+            mCellSize = GetCellSize();
+            mSizeInPatches = GetPanelPatches();
         }
 
         #endregion rUpdate
@@ -128,12 +129,12 @@
 
 
         /// <summary>
-        /// Get the size required to display the text within this UIObject
+        /// Get the number of patches required to display text
         /// </summary>
-        /// <returns>Size of string in pixels</returns>
+        /// <returns>Size of string in patches</returns>
         public Vector2 GetTextSize()
         {
-            return (FontManager.GetFont("monogram").MeasureString(mCurrentText));
+            return FontManager.GetFont("monogram").MeasureString(mCurrentText);
         }
 
 
@@ -151,9 +152,12 @@
         /// <summary>
         /// Get necessary size of background panel in patches
         /// </summary>
-        public Vector2 GetPanelSize()
+        public Vector2 GetPanelPatches()
         {
-            return new Vector2(mCellSize.X + mCellSize.X, mCellSize.Y + mCellSize.Y);
+            int x = (int)Math.Ceiling(mCellSize.X / PATCH_SIZE);
+            int y = (int)Math.Ceiling(mCellSize.Y / PATCH_SIZE);
+
+            return new Vector2(x + 2, y + 2); // Add two extra patches to allow text centering
         }
 
 
@@ -161,12 +165,12 @@
         {
             Vector2 patchPos = Vector2.Zero;
 
-            for (int x = 0; x < mSizeInPatches.X; x++)
+            for (patchPos.X = 0; patchPos.X < mSizeInPatches.X; patchPos.X++)
             {
-                for (int y = 0; y < mSizeInPatches.Y; y++)
+                for (patchPos.Y = 0; patchPos.Y < mSizeInPatches.Y; patchPos.Y++)
                 {
-                    // Determine screen position
-                    Vector2 screenPos = patchPos * PATCH_SIZE + mPosition;
+                    // Determine patches screen position
+                    Vector2 screenPos = patchPos * PATCH_SIZE + new Vector2(mPosition.X - PATCH_SIZE, mPosition.Y - PATCH_SIZE);
 
                     // Calculate which patch of sprite is needed
                     Vector2 sourcePatch = Vector2.Zero;
@@ -176,7 +180,7 @@
                     if (patchPos.Y > 0) { sourcePatch.Y = 1; }
                     if (patchPos.Y == mSizeInPatches.Y - 1) { sourcePatch.Y = 2; }
 
-                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), screenPos, sourcePatch, new Vector2(PATCH_SIZE, PATCH_SIZE), Color.White);
+                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), screenPos, sourcePatch * PATCH_SIZE, new Vector2(PATCH_SIZE, PATCH_SIZE), Color.White);
                 }
             }
         }

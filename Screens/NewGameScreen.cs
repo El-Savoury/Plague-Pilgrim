@@ -86,8 +86,8 @@
 
             info.spriteBatch.Begin();
 
-            mRoleSelects[0].Draw(info);
             mRoleSelects[0].DrawPanel(info);
+            mRoleSelects[0].Draw(info);
 
             info.spriteBatch.End();
 
