@@ -7,14 +7,14 @@
     {
         #region rMembers
 
-       
+        TileManager mTileManager = new TileManager();
 
         #endregion rMembers
 
 
 
 
-
+        
 
         #region rInitialisation
 
@@ -24,7 +24,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-           
+            mTileManager.InitTileMap(Vector2.Zero, new Point(30,30));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// </summary>
         public override void LoadContent()
         {
-            
+            mTileManager.LoadTileMap();
         }
 
         #endregion rInitialisation
@@ -50,7 +50,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-           
+
         }
 
         #endregion rUpdate
@@ -74,7 +74,7 @@
 
             info.spriteBatch.Begin();
 
-            
+            mTileManager.Draw(info);
 
             info.spriteBatch.End();
 
