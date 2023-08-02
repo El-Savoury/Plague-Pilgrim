@@ -1,23 +1,22 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Tile representing the ground
+    /// An invisible tile that does nothing
     /// </summary>
-    internal class GroundTile : Tile
+    internal class EmptyTile : Tile
     {
-
         #region rInitialisation
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public GroundTile(Vector2 pos) :base(pos)
+        public EmptyTile(Vector2 pos) : base(pos)
         {
         }
 
         public override void LoadContent()
         {
-            mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/ground");
+            mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/empty");
         }
 
         #endregion rInitialisation
@@ -38,6 +37,23 @@
         }
 
         #endregion rUpdate
+
+
+
+
+
+        #region rUtility
+
+        /// <summary>
+        /// Is this tile solid?
+        /// </summary>
+        /// <returns>True if tile is solid</returns>
+        public override bool IsSolid()
+        {
+            return false;
+        }
+
+        #endregion rUtility
 
     }
 }

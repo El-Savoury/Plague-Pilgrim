@@ -11,7 +11,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public RockTile(Vector2 pos, TileManager manager) :base(pos, manager)
+        public RockTile(Vector2 pos) : base(pos)
         {
         }
 

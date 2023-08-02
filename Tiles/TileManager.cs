@@ -1,27 +1,26 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
+    /// <summary>
+    /// Info require to init tile map
+    /// </summary>
+    struct TileMapInfo
+    {
+        public Vector2 mTileMapSize;
+        // Difficulty
+        // Texture pack
+    }
+
     /// <summary>
     /// Class to manage tile map
     /// </summary>
-    internal class TileManager
+    static class TileManager
     {
-        #region rConstants
-
-        int TILE_SIZE = 32;
-
-        #endregion rConstants
-
-
-
-
-
-
         #region rMembers
 
-        Tile[,] mTileMap;
-        Vector2 mTileMapPos;
+        static Tile[,] mTileMap;
+        static Vector2 mTileMapPos;
+        static Tile mDefaultTile;
+        static int mTileSize;
 
         #endregion rMembers
 
@@ -32,36 +31,30 @@ namespace Plague_Pilgrim
 
 
         #region rInitialisation
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TileManager()
-        {
-        }
-
-
+ 
         /// <summary>
         /// Inititialse size and world position of tile map
         /// </summary>
         /// <param name="pos">Top left corner of tile map</param>
         /// <param name="mapSize">Width and height of tile map in tiles</param>
-        public void InitTileMap(Vector2 pos, Point mapSize)
+        public static void InitTileMap(Vector2 pos, Point mapSize)
         {
             mTileMapPos = pos;
             mTileMap = new Tile[mapSize.X, mapSize.Y];
+            mDefaultTile = new EmptyTile(Vector2.Zero);
+            mTileSize = mDefaultTile.GetSize();
         }
 
 
-        public void LoadTileMap()
+        public static void LoadTileMap()
         {
             for (int x = 0; x < mTileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < mTileMap.GetLength(1); y++)
                 {
-                    int index = x + y * TILE_SIZE;
+                    int index = x + y * mTileSize;
 
-                    mTileMap[x, y] = new GroundTile(GetTileTopLeft(new Point(x,y)), this);
+                    mTileMap[x, y] = new EmptyTile(GetTileTopLeft(new Point(x, y)));
                     mTileMap[x, y].LoadContent();
                 }
             }
@@ -73,7 +66,7 @@ namespace Plague_Pilgrim
 
         #region rUpdate
 
-        public void Update(GameTime gameTime)
+        public static void Update(GameTime gameTime)
         {
         }
 
@@ -87,7 +80,7 @@ namespace Plague_Pilgrim
 
         #region rDraw
 
-        public void Draw(DrawInfo info)
+        public static void Draw(DrawInfo info)
         {
             Point offset = new Point((int)mTileMapPos.X, (int)mTileMapPos.Y);
 
@@ -95,7 +88,7 @@ namespace Plague_Pilgrim
             {
                 for (int y = 0; y < mTileMap.GetLength(1); y++)
                 {
-                    Rectangle drawRect = new Rectangle(offset.X + x * TILE_SIZE, offset.Y + y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    Rectangle drawRect = new Rectangle(offset.X + x * mTileSize, offset.Y + y * mTileSize, mTileSize, mTileSize);
                     DrawTile(info, drawRect, mTileMap[x, y]);
                 }
             }
@@ -108,10 +101,10 @@ namespace Plague_Pilgrim
         /// <param name="info"></param>
         /// <param name="drawDestination"></param>
         /// <param name="tile"></param>
-        private void DrawTile(DrawInfo info, Rectangle drawDestination, Tile tile)
+        private static void DrawTile(DrawInfo info, Rectangle drawDestination, Tile tile)
         {
-            Rectangle sourceRect = new Rectangle(tile.mTileMapIndex.X * TILE_SIZE, tile.mTileMapIndex.Y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            Draw2D.DrawTexture(info, tile.mTexture, new Vector2(drawDestination.X, drawDestination.Y));
+            Rectangle sourceRect = new Rectangle(tile.GetMapIndex().X * mTileSize, tile.GetMapIndex().Y * mTileSize, mTileSize, mTileSize);
+            Draw2D.DrawTexture(info, tile.GetTexture(), new Vector2(drawDestination.X, drawDestination.Y));
         }
 
         #endregion rDraw
@@ -126,7 +119,7 @@ namespace Plague_Pilgrim
         /// </summary>
         /// <param name="pos">Tile world coordinates</param>
         /// <returns>Tile reference</returns>
-        public Tile GetTile(Vector2 pos)
+        public static Tile GetTile(Vector2 pos)
         {
             return GetTile(GetTileMapCoord(pos));
         }
@@ -137,7 +130,7 @@ namespace Plague_Pilgrim
         /// </summary>
         /// <param name="coord">Tile map coordintate of desired tile</param>
         /// <returns>Tile reference</returns>
-        public Tile GetTile(Point coord)
+        public static Tile GetTile(Point coord)
         {
             return GetTile(coord.X, coord.Y);
         }
@@ -149,7 +142,7 @@ namespace Plague_Pilgrim
         /// <param name="x">Tile x coordinate</param>
         /// <param name="y">Tile y coordinate</param>
         /// <returns>Tile reference</returns>
-        public Tile GetTile(int x, int y)
+        public static Tile GetTile(int x, int y)
         {
             if (x >= 0 && x < mTileMap.GetLength(0) &&
                 y >= 0 && y < mTileMap.GetLength(1))
@@ -166,10 +159,10 @@ namespace Plague_Pilgrim
         /// </summary>
         /// <param name="pos">World space position</param>
         /// <returns><Tile map index. Note may be out of bounds/returns>
-        public Point GetTileMapCoord(Vector2 pos)
+        public static Point GetTileMapCoord(Vector2 pos)
         {
             pos = pos - mTileMapPos;
-            pos = pos / TILE_SIZE;
+            pos = pos / mTileSize;
 
             Point coord = new Point((int)Math.Floor(pos.X), (int)Math.Floor(pos.Y));
 
@@ -182,12 +175,12 @@ namespace Plague_Pilgrim
         /// </summary>
         /// <param name="index">Tile map index of tile</param>
         /// <returns>Tiles top left corner position</returns>
-        public Vector2 GetTileTopLeft(Point index)
+        public static Vector2 GetTileTopLeft(Point index)
         {
             Vector2 result = mTileMapPos;
 
-            result.X += index.X * TILE_SIZE;
-            result.Y += index.Y * TILE_SIZE;
+            result.X += index.X * mTileSize;
+            result.Y += index.Y * mTileSize;
 
             return result;
         }

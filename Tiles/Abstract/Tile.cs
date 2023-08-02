@@ -5,12 +5,22 @@
     /// </summary>
     abstract class Tile
     {
+        #region rConstants
+        
+        private int TILE_SIZE = 32;
+
+        #endregion rConstants
+
+
+
+
+
         #region rMembers
 
         private Vector2 mPosition;
-        public Texture2D mTexture;
+        protected Texture2D mTexture;
         protected bool mEnabled = true;
-        public Point mTileMapIndex;
+        protected Point mTileMapIndex;
 
         #endregion rMembers
 
@@ -23,10 +33,10 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public Tile(Vector2 pos, TileManager manager)
+        public Tile(Vector2 pos)
         {
             mPosition = pos;
-            mTileMapIndex = manager.GetTileMapCoord(pos);
+            mTileMapIndex = TileManager.GetTileMapCoord(pos);
         }
 
 
@@ -60,12 +70,12 @@
         #region rDraw
 
         /// <summary>
-        /// Draw tile
+        /// Get tile texture
         /// </summary>
-        /// <param name="drawInfo">Info needed by Monogame to draw</param>
-        public virtual void Draw(DrawInfo info)
+        /// <returns>Texture reference</returns>
+        public virtual Texture2D GetTexture()
         {
-            Draw2D.DrawTexture(info, mTexture, mPosition);
+            return mTexture;
         }
 
         #endregion rDraw
@@ -74,16 +84,25 @@
 
 
 
+
         #region rUtility
+
+        /// <summary>
+        /// Get the tile map coordiante of this tile
+        /// </summary>
+        /// <returns>Tile map coords/returns>
+        public virtual Point GetMapIndex()
+        {
+            return mTileMapIndex;
+        }
 
         /// <summary>
         /// Is this tile enabled?
         /// </summary>
-        public bool GetEnabled()
+        public virtual bool GetEnabled()
         {
             return mEnabled;
         }
-
 
         /// <summary>
         /// Is this tile solid?
@@ -94,6 +113,43 @@
             return false;
         }
 
+
+        /// <summary>
+        /// Get tile width and height
+        /// </summary>
+        /// <returns>Tile size in pixels</returns>
+        public virtual int GetSize()
+        {
+            return TILE_SIZE;
+        }
+
         #endregion rUtility
+
+
+
+
+
+        #region rCollision
+
+        /// <summary>
+        /// Get the bounds of this tile
+        /// </summary>
+        /// <returns>Collision rectangle</returns>
+        public Rect2f GetBounds()
+        {
+            return CalculateBounds();
+        }
+
+
+        /// <summary>
+        /// Calculate the bounds of this tile.
+        /// </summary>
+        /// <returns>Collision rectangle</returns>
+        protected virtual Rect2f CalculateBounds()
+        {
+            return new Rect2f(mPosition, mPosition + new Vector2(TILE_SIZE, TILE_SIZE));
+        }
+
+        #endregion rCollision
     }
 }

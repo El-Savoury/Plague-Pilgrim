@@ -7,7 +7,7 @@
     {
         #region rMembers
 
-        TileManager mTileManager = new TileManager();
+      
 
         #endregion rMembers
 
@@ -24,7 +24,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            mTileManager.InitTileMap(Vector2.Zero, new Point(30,30));
+            TileManager.InitTileMap(Vector2.Zero, new Point(30,30));
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// </summary>
         public override void LoadContent()
         {
-            mTileManager.LoadTileMap();
+            TileManager.LoadTileMap();
         }
 
         #endregion rInitialisation
@@ -70,11 +70,11 @@
         public override RenderTarget2D DrawToRenderTarget(DrawInfo info)
         {
             info.device.SetRenderTarget(mScreenTarget);
-            info.device.Clear(Color.Black);
+            info.device.Clear(Color.CornflowerBlue);
 
             info.spriteBatch.Begin();
 
-            mTileManager.Draw(info);
+            TileManager.Draw(info);
 
             info.spriteBatch.End();
 
