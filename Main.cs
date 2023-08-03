@@ -57,6 +57,9 @@
         /// </summary>
         protected override void Initialize()
         {
+            mGraphics.PreferredBackBufferWidth = 800;
+            mGraphics.PreferredBackBufferHeight = 800;
+
             mGraphics.IsFullScreen = false;
             mGraphics.ApplyChanges();
 

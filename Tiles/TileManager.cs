@@ -31,7 +31,7 @@
 
 
         #region rInitialisation
- 
+
         /// <summary>
         /// Inititialse size and world position of tile map
         /// </summary>
@@ -48,16 +48,72 @@
 
         public static void LoadTileMap()
         {
-            for (int x = 0; x < mTileMap.GetLength(0); x++)
-            {
-                for (int y = 0; y < mTileMap.GetLength(1); y++)
-                {
-                    int index = x + y * mTileSize;
+            int[] bankLeft = GetBankWidths();
+            int[] bankRight = GetBankWidths();
 
-                    mTileMap[x, y] = new EmptyTile(GetTileTopLeft(new Point(x, y)));
+            for (int y = 0; y < mTileMap.GetLength(1); y++)
+            {
+                for (int x = 0; x < mTileMap.GetLength(0); x++)
+                {
+                    Vector2 tileTopLeft = GetTileTopLeft(new Point(x, y));
+
+                    if (x < bankLeft[y] || x >= mTileMap.GetLength(0) - bankRight[y])
+                    {
+                        mTileMap[x, y] = new GroundTile(tileTopLeft);
+                    }
+                    else
+                    {
+                        mTileMap[x, y] = new EmptyTile(tileTopLeft);
+                    }
+
                     mTileMap[x, y].LoadContent();
                 }
             }
+        }
+
+
+        public static int[] GetBankWidths()
+        {
+            Random rand = new Random();
+            int[] widths = new int[mTileMap.GetLength(1)];
+
+            for (int i = 0; i < widths.Length; i++)
+            {
+                widths[i] = rand.Next(2, 4);
+            }
+
+            for (int y = 1; y < widths.Length; y++)
+            {
+                int roll = rand.Next(0, 2);
+
+                if (roll == 0)
+                {
+                    widths[y] = widths[y - 1] + 1;
+                }
+                else /*if (roll == 1)*/
+                {
+                    widths[y] = widths[y - 1] - 1;
+                }
+                //else
+                //{
+                //    widths[y] = widths[y - 1];
+                //}
+
+                widths[y] = Math.Clamp(widths[y], 2, 5);
+            }
+
+            return SmoothBanks(widths);
+        }
+
+
+        private static int[] SmoothBanks(int[] widths)
+        {
+            for (int i = 0; i < widths.Length - 2; i++)
+            {
+                widths[i] = (widths[i] + widths[i + 1] + widths[i + 2]) / 3;
+            }
+
+            return widths;
         }
 
         #endregion rInitialisation

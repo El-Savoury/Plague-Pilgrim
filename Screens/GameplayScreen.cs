@@ -7,14 +7,14 @@
     {
         #region rMembers
 
-      
+
 
         #endregion rMembers
 
 
 
 
-        
+
 
         #region rInitialisation
 
@@ -24,7 +24,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            TileManager.InitTileMap(Vector2.Zero, new Point(30,30));
+            TileManager.InitTileMap(Vector2.Zero, new Point(25, 25));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-
+            if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
         }
 
         #endregion rUpdate
