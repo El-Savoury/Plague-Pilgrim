@@ -24,7 +24,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            TileManager.InitTileMap(Vector2.Zero, new Point(25, 25));
+            TileManager.InitTileMap(Vector2.Zero, new Point(50, 50));
         }
 
         /// <summary>

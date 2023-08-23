@@ -6,8 +6,8 @@
     abstract class Tile
     {
         #region rConstants
-        
-        private int TILE_SIZE = 32;
+
+        private int TILE_SIZE = 16;
 
         #endregion rConstants
 

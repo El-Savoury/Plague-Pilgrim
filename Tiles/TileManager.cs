@@ -15,6 +15,18 @@
     /// </summary>
     static class TileManager
     {
+        #region rConstants
+
+        static int GROUND_MAX_WIDTH = 10;
+        static int GROUND_MIN_WIDTH = 4;
+
+        #endregion rConstants
+
+
+
+
+
+
         #region rMembers
 
         static Tile[,] mTileMap;
@@ -76,15 +88,17 @@
         {
             Random rand = new Random();
             int[] widths = new int[mTileMap.GetLength(1)];
+            int minWidth = 4;
+            int maxWidth = 10;
 
             for (int i = 0; i < widths.Length; i++)
             {
-                widths[i] = rand.Next(2, 4);
+                widths[i] = rand.Next(minWidth, maxWidth);
             }
 
             for (int y = 1; y < widths.Length; y++)
             {
-                int roll = rand.Next(0, 2);
+                int roll = RandomManager.FlipCoin(); 
 
                 if (roll == 0)
                 {
@@ -99,7 +113,7 @@
                 //    widths[y] = widths[y - 1];
                 //}
 
-                widths[y] = Math.Clamp(widths[y], 2, 5);
+                widths[y] = Math.Clamp(widths[y], minWidth, maxWidth);
             }
 
             return SmoothBanks(widths);
