@@ -11,7 +11,8 @@
         // Menu controls
         Confirm,
         Backspace,
-        Randomise
+        Randomise,
+        Escape
     }
 
     /// <summary>
@@ -21,9 +22,10 @@
     {
         #region rMembers
 
-        static Dictionary<Controls, InputBindSet> mInputBindings = new Dictionary<Controls, InputBindSet>();
+        static Dictionary<Controls, InputKey> mInputKeys = new Dictionary<Controls, InputKey>();
 
         #endregion rMembers
+
 
 
 
@@ -34,18 +36,19 @@
         /// <summary>
         /// Set default input bindings.
         /// </summary>
-        public static void SetDefaultBindings()
+        public static void SetControls()
         {
             // Arrow Keys
-            mInputBindings.Add(Controls.Left, new InputBindSet(new KeyBinding(Keys.Left)));
-            mInputBindings.Add(Controls.Right, new InputBindSet(new KeyBinding(Keys.Right)));
-            mInputBindings.Add(Controls.Up, new InputBindSet(new KeyBinding(Keys.Up)));
-            mInputBindings.Add(Controls.Down, new InputBindSet(new KeyBinding(Keys.Down)));
+            mInputKeys.Add(Controls.Left, new InputKey(Keys.Left));
+            mInputKeys.Add(Controls.Right, new InputKey(Keys.Right));
+            mInputKeys.Add(Controls.Up, new InputKey(Keys.Up));
+            mInputKeys.Add(Controls.Down, new InputKey(Keys.Down));
 
             // Menu controls
-            mInputBindings.Add(Controls.Confirm, new InputBindSet(new KeyBinding(Keys.Space)));
-            mInputBindings.Add(Controls.Backspace, new InputBindSet(new KeyBinding(Keys.Back)));
-            mInputBindings.Add(Controls.Randomise, new InputBindSet(new KeyBinding(Keys.Tab)));
+            mInputKeys.Add(Controls.Confirm, new InputKey(Keys.Space));
+            mInputKeys.Add(Controls.Backspace, new InputKey(Keys.Back));
+            mInputKeys.Add(Controls.Randomise, new InputKey(Keys.Tab));
+            mInputKeys.Add(Controls.Escape, new InputKey(Keys.Escape));
         }
 
         #endregion rInititialisation
@@ -63,7 +66,7 @@
         /// <param name="gameTime">Frame time</param>
         public static void Update(GameTime gameTime)
         {
-            foreach (KeyValuePair<Controls, InputBindSet> keyBindPair in mInputBindings)
+            foreach (KeyValuePair<Controls, InputKey> keyBindPair in mInputKeys)
             {
                 keyBindPair.Value.Update(gameTime);
             }
@@ -78,7 +81,7 @@
         /// <returns>True if key pressed in last update</returns>
         public static bool KeyPressed(Controls key)
         {
-            return mInputBindings[key].AnyKeyPressed();
+            return mInputKeys[key].IsInputPressed();
         }
 
 
@@ -89,7 +92,7 @@
         /// <returns>True if key was down in most recent update and previous update</returns>
         public static bool KeyHeld(Controls key)
         {
-            return mInputBindings[key].AnyKeyHeld();
+            return mInputKeys[key].IsInputDown();
         }
 
 
@@ -100,7 +103,7 @@
         /// <returns>True if key was up in most recent update and down in previous update</returns>
         public static bool KeyReleased(Controls key)
         {
-            return mInputBindings[key].AnyKeyReleased();
+            return mInputKeys[key].IsInputReleased();
         }
 
         #endregion rKeySense

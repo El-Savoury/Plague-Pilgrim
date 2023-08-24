@@ -31,7 +31,7 @@
         /// Return seeded random
         /// </summary>
         /// <returns>Global random</returns>
-        public static Random GetWorldSeed()
+        public static Random GetWorldRandom()
         {
             return mWorldRandom;
         }
@@ -44,6 +44,24 @@
 
 
         #region rUtility
+
+
+        /// <summary>
+        /// Return next random number
+        /// </summary>
+        public static int Next()
+        {
+            return mWorldRandom.Next();
+        }
+
+
+        /// <summary>
+        /// Return random number within specified range
+        /// </summary>
+        public static int Range(int min, int max)
+        {
+            return mWorldRandom.Next(min, max);
+        }
 
         /// <summary>
         /// Returns a head or tails result for basic random decisions

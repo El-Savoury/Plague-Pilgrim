@@ -62,7 +62,15 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mRoleSelects[0].Update();
+            foreach (UIObject role in mRoleSelects)
+            {
+                role.Update();
+            }
+
+            foreach (UIObject name in mNameInputs)
+            {
+                name.Update();
+            }
         }
 
         #endregion rUpdate
@@ -86,8 +94,17 @@
 
             info.spriteBatch.Begin();
 
-            mRoleSelects[0].DrawPanel(info);
-            mRoleSelects[0].Draw(info);
+            foreach (UIObject role in mRoleSelects)
+            {
+                role.DrawPanel(info);
+                role.Draw(info);
+            }
+
+            foreach (UIObject name in mNameInputs)
+            {
+                name.DrawPanel(info);
+                name.Draw(info);
+            }
 
             info.spriteBatch.End();
 

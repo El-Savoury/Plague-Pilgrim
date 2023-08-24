@@ -1,9 +1,9 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Represents a single input binding. Is either on or off.
+    /// Represents a single input. Is either on or off.
     /// </summary>
-    abstract class InputBinding
+    abstract class Input
     {
         bool mPreviousState;
         bool mCurrentState;
@@ -12,7 +12,7 @@
         /// <summary>
         /// Constructor
         /// </summary>
-        public InputBinding()
+        public Input()
         {
             mPreviousState = false;
             mCurrentState = false;
@@ -60,13 +60,13 @@
 
 
     /// <summary>
-    /// Keyboard button binding.
+    /// Keyboard button inputs
     /// </summary>
-    class KeyBinding : InputBinding
+    class InputKey : Input
     {
         Keys mInputKey;
 
-        public KeyBinding(Keys inputKey)
+        public InputKey(Keys inputKey)
         {
             mInputKey = inputKey;
         }

@@ -5,7 +5,7 @@
     /// </summary>
     struct TileMapInfo
     {
-        public Vector2 mTileMapSize;
+        public Point mTileMapSize;
         // Difficulty
         // Texture pack
     }
@@ -17,6 +17,7 @@
     {
         #region rConstants
 
+        static Point MAP_SIZE = new Point(50, 50);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 4;
 
@@ -49,10 +50,10 @@
         /// </summary>
         /// <param name="pos">Top left corner of tile map</param>
         /// <param name="mapSize">Width and height of tile map in tiles</param>
-        public static void InitTileMap(Vector2 pos, Point mapSize)
+        public static void InitTileMap(Vector2 pos)
         {
             mTileMapPos = pos;
-            mTileMap = new Tile[mapSize.X, mapSize.Y];
+            mTileMap = new Tile[MAP_SIZE.X, MAP_SIZE.Y];
             mDefaultTile = new EmptyTile(Vector2.Zero);
             mTileSize = mDefaultTile.GetSize();
         }
@@ -86,47 +87,36 @@
 
         public static int[] GetBankWidths()
         {
-            Random rand = new Random();
             int[] widths = new int[mTileMap.GetLength(1)];
-            int minWidth = 4;
-            int maxWidth = 10;
 
+            // Set starting width
+            int lastWidth = RandomManager.Range(GROUND_MIN_WIDTH, GROUND_MAX_WIDTH + 1);
+
+            int nextMove = 0; // Used to determine which direction to go
+            int sectionWidth = 0; // Used to keep track of the current sections width
+            int minSectionWidth = 4;
+
+            // Cycle through our widths
             for (int i = 0; i < widths.Length; i++)
             {
-                widths[i] = rand.Next(minWidth, maxWidth);
-            }
+                // Flip coin to determine next move up or down
+                nextMove = RandomManager.FlipCoin();
 
-            for (int y = 1; y < widths.Length; y++)
-            {
-                int roll = RandomManager.FlipCoin(); 
-
-                if (roll == 0)
+                //Only change the height if current height used more than the minimum required section width
+                if (nextMove == 0 && lastWidth > GROUND_MIN_WIDTH && sectionWidth > minSectionWidth)
                 {
-                    widths[y] = widths[y - 1] + 1;
+                    lastWidth--;
+                    sectionWidth = 0;
                 }
-                else /*if (roll == 1)*/
+                else if (nextMove == 1 && lastWidth < GROUND_MAX_WIDTH && sectionWidth > minSectionWidth)
                 {
-                    widths[y] = widths[y - 1] - 1;
+                    lastWidth++;
+                    sectionWidth = 0;
                 }
-                //else
-                //{
-                //    widths[y] = widths[y - 1];
-                //}
 
-                widths[y] = Math.Clamp(widths[y], minWidth, maxWidth);
+                sectionWidth++;
+                widths[i] = lastWidth;
             }
-
-            return SmoothBanks(widths);
-        }
-
-
-        private static int[] SmoothBanks(int[] widths)
-        {
-            for (int i = 0; i < widths.Length - 2; i++)
-            {
-                widths[i] = (widths[i] + widths[i + 1] + widths[i + 2]) / 3;
-            }
-
             return widths;
         }
 
