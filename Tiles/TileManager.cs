@@ -17,7 +17,7 @@
     {
         #region rConstants
 
-        static Point MAP_SIZE = new Point(50, 50);
+        static Point MAP_SIZE = new Point(50, 10);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 4;
 
@@ -85,7 +85,7 @@
         }
 
 
-        public static int[] GetBankWidths()
+        private static int[] GetBankWidths()
         {
             int[] widths = new int[mTileMap.GetLength(1)];
 
@@ -94,7 +94,7 @@
 
             int nextMove = 0; // Used to determine which direction to go
             int sectionWidth = 0; // Used to keep track of the current sections width
-            int minSectionWidth = 4;
+            int minSectionWidth = 1;
 
             // Cycle through our widths
             for (int i = 0; i < widths.Length; i++)
@@ -173,6 +173,16 @@
 
 
         #region rUtility
+
+        /// <summary>
+        /// Get size of tile map
+        /// </summary>
+        /// <returns>Rows and columns in tilemap</returns>
+        public static Point GetSize()
+        {
+            return MAP_SIZE;
+        }
+
 
         /// <summary>
         /// Get tile at a world position

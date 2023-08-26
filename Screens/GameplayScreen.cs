@@ -7,7 +7,7 @@
     {
         #region rMembers
 
-
+        Player mPlayer;
 
         #endregion rMembers
 
@@ -27,12 +27,16 @@
             TileManager.InitTileMap(Vector2.Zero);
         }
 
+
         /// <summary>
         /// Load content required for gameplay
         /// </summary>
         public override void LoadContent()
         {
             TileManager.LoadTileMap();
+            
+            mPlayer = new Player(TileManager.GetTileTopLeft(new Point(TileManager.GetSize().X / 2, TileManager.GetSize().Y - 1))); // Spawn player in middle tile of tile map bottom row 
+            mPlayer.LoadContent(Main.GetContentManager());
         }
 
         #endregion rInitialisation
@@ -51,6 +55,8 @@
         public override void Update(GameTime gameTime)
         {
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
+
+            mPlayer.Update(gameTime);
         }
 
         #endregion rUpdate
@@ -75,6 +81,7 @@
             info.spriteBatch.Begin();
 
             TileManager.Draw(info);
+            mPlayer.Draw(info);
 
             info.spriteBatch.End();
 

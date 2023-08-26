@@ -3,13 +3,13 @@
     /// <summary>
     /// Playable entity. 
     /// </summary>
-    class Player : Entity
+    class Player : MovingEntity
     {
         #region rConstants
 
-        const float SPEED = 1.0f;
-        const int WIDTH = 8;
-        const int HEIGHT = 8;
+        const float SPEED = 8.0f;
+        const int WIDTH = 16;
+        const int HEIGHT = 16;
 
         #endregion rConstants
 
@@ -37,7 +37,7 @@
         /// <param name="pos">Starting position</param>
         public Player(Vector2 pos) : base(pos)
         {
-            
+
         }
 
 
@@ -65,7 +65,9 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
+            SetVelocity(CalcMovement());
 
+            base.Update(gameTime);
         }
 
 
@@ -100,6 +102,7 @@
             {
                 inputDir.Normalize();
             }
+
             return inputDir * SPEED;
         }
 
