@@ -96,7 +96,7 @@
         /// <summary>
         /// Get position of entity
         /// </summary>
-        public Vector2 GetPos()
+        public Vector2 GetPosition()
         {
             return mPosition;
         }

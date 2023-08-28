@@ -1,13 +1,13 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Playable entity. 
+    /// Playable entity
     /// </summary>
     class Player : MovingEntity
     {
         #region rConstants
 
-        const float SPEED = 8.0f;
+        const float SPEED = 3.0f;
         const int WIDTH = 16;
         const int HEIGHT = 16;
 
@@ -20,7 +20,7 @@
 
         #region rMembers
 
-        // Add members here.
+        // Add members here
 
         #endregion rMembers
 

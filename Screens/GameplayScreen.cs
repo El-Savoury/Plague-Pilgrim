@@ -8,6 +8,7 @@
         #region rMembers
 
         Player mPlayer;
+        Camera mCamera;
 
         #endregion rMembers
 
@@ -25,6 +26,7 @@
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
             TileManager.InitTileMap(Vector2.Zero);
+            mCamera = new Camera();
         }
 
 
@@ -34,7 +36,7 @@
         public override void LoadContent()
         {
             TileManager.LoadTileMap();
-            
+
             mPlayer = new Player(TileManager.GetTileTopLeft(new Point(TileManager.GetSize().X / 2, TileManager.GetSize().Y - 1))); // Spawn player in middle tile of tile map bottom row 
             mPlayer.LoadContent(Main.GetContentManager());
         }
@@ -57,6 +59,7 @@
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
             mPlayer.Update(gameTime);
+            mCamera.Update(gameTime);
         }
 
         #endregion rUpdate
@@ -78,12 +81,12 @@
             info.device.SetRenderTarget(mScreenTarget);
             info.device.Clear(Color.CornflowerBlue);
 
-            info.spriteBatch.Begin();
+            Vector2 viewPortSize = new Vector2(GetScreenSize().Width, GetScreenSize().Height);
 
+            mCamera.StartSpriteBatch(info, viewPortSize);
             TileManager.Draw(info);
             mPlayer.Draw(info);
-
-            info.spriteBatch.End();
+            mCamera.EndSpriteBatch(info);
 
             return mScreenTarget;
         }

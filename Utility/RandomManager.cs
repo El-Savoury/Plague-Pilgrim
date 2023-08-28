@@ -58,13 +58,13 @@
         /// <summary>
         /// Return random number within specified range
         /// </summary>
-        public static int Range(int min, int max)
+        public static int Next(int min, int max)
         {
             return mWorldRandom.Next(min, max);
         }
 
         /// <summary>
-        /// Returns a head or tails result for basic random decisions
+        /// Returns a head or tails result for basic 50/50 decisions
         /// </summary>
         /// <returns>Either 0 or 1</returns>
         public static int FlipCoin()

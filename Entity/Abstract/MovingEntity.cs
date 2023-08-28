@@ -102,7 +102,6 @@
             mVelocity = vel;
         }
 
-
         #endregion rUtility
     }
 }

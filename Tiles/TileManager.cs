@@ -1,7 +1,7 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// Info require to init tile map
+    /// Info required to init tile map
     /// </summary>
     struct TileMapInfo
     {
@@ -17,9 +17,10 @@
     {
         #region rConstants
 
-        static Point MAP_SIZE = new Point(50, 10);
+        static Point MAP_SIZE = new Point(50, 700);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 4;
+        static int MIN_SECTION_WIDTH = 2;
 
         #endregion rConstants
 
@@ -90,12 +91,11 @@
             int[] widths = new int[mTileMap.GetLength(1)];
 
             // Set starting width
-            int lastWidth = RandomManager.Range(GROUND_MIN_WIDTH, GROUND_MAX_WIDTH + 1);
+            int lastWidth = RandomManager.Next(GROUND_MIN_WIDTH, GROUND_MAX_WIDTH + 1);
 
             int nextMove = 0; // Used to determine which direction to go
             int sectionWidth = 0; // Used to keep track of the current sections width
-            int minSectionWidth = 1;
-
+            
             // Cycle through our widths
             for (int i = 0; i < widths.Length; i++)
             {
@@ -103,12 +103,12 @@
                 nextMove = RandomManager.FlipCoin();
 
                 //Only change the height if current height used more than the minimum required section width
-                if (nextMove == 0 && lastWidth > GROUND_MIN_WIDTH && sectionWidth > minSectionWidth)
+                if (nextMove == 0 && lastWidth > GROUND_MIN_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
                 {
                     lastWidth--;
                     sectionWidth = 0;
                 }
-                else if (nextMove == 1 && lastWidth < GROUND_MAX_WIDTH && sectionWidth > minSectionWidth)
+                else if (nextMove == 1 && lastWidth < GROUND_MAX_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
                 {
                     lastWidth++;
                     sectionWidth = 0;
