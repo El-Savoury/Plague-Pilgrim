@@ -26,7 +26,6 @@
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
             TileManager.InitTileMap(Vector2.Zero);
-            mCamera = new Camera();
         }
 
 
@@ -39,6 +38,8 @@
 
             mPlayer = new Player(TileManager.GetTileTopLeft(new Point(TileManager.GetSize().X / 2, TileManager.GetSize().Y - 1))); // Spawn player in middle tile of tile map bottom row 
             mPlayer.LoadContent(Main.GetContentManager());
+
+            mCamera = new Camera(new Vector2(0.0f, mPlayer.GetPosition().Y + 16 - GetScreenSize().Height));
         }
 
         #endregion rInitialisation
@@ -81,9 +82,9 @@
             info.device.SetRenderTarget(mScreenTarget);
             info.device.Clear(Color.CornflowerBlue);
 
-            Vector2 viewPortSize = new Vector2(GetScreenSize().Width, GetScreenSize().Height);
 
-            mCamera.StartSpriteBatch(info, viewPortSize);
+
+            mCamera.StartSpriteBatch(info);
             TileManager.Draw(info);
             mPlayer.Draw(info);
             mCamera.EndSpriteBatch(info);

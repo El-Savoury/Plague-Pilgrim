@@ -1,27 +1,11 @@
-﻿namespace Plague_Pilgrim
+﻿using System.Diagnostics.Tracing;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
-	/// Struct to specify the camera properties
-	/// </summary>
-	struct CameraSpec
-    {
-        public CameraSpec()
-        {
-            mPosition = Vector2.Zero;
-            mRotation = 0.0f;
-            mZoom = 1.0f;
-        }
-
-        public Vector2 mPosition;
-        public float mRotation;
-        public float mZoom;
-    }
-
-
-    /// <summary>
-	/// Options for scaling and ordering
-	/// </summary>
-	struct SpriteBatchOptions
+    /// Options for scaling and ordering
+    /// </summary>
+    struct SpriteBatchOptions
     {
         public SpriteBatchOptions()
         {
@@ -41,14 +25,22 @@
 
 
     /// <summary>
-	/// Camera for drawing the viewport
-	/// </summary>
+    /// Camera for creating and drawing to the viewport
+    /// </summary>
     internal class Camera
     {
+        #region rConstants
+
+        private float SPEED = 3.0f;
+        private float MIN_POS = 0.0f;
+
+        #endregion rConstants
+
+
 
         #region rMembers
 
-        private CameraSpec mCameraSpec;
+        private Vector2 mPosition;
         private SpriteBatchOptions mSpriteBatchOptions;
 
         #endregion rMembers
@@ -60,14 +52,13 @@
 
         #region rInitialisation
 
-        public Camera()
+        public Camera(Vector2 pos)
         {
-            mCameraSpec = new CameraSpec();
+            mPosition = pos;
             mSpriteBatchOptions = new SpriteBatchOptions();
         }
 
         #endregion rInitialisation
-
 
 
 
@@ -81,10 +72,13 @@
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            //Move(new Vector2(0.0f, -3.0f), gameTime);
-        }
+            mPosition.Y -= SPEED * Utility.GetDeltaTime(gameTime);
 
+            if (mPosition.Y < MIN_POS) { mPosition.Y = MIN_POS; }
+        }
         #endregion rUpdate
+
+
 
 
 
@@ -96,16 +90,16 @@
         /// <summary>
         /// Caulate perspective matrix
         /// </summary>
-        Matrix CalculateMatrix(Vector2 ViewPortSize)
+        Matrix CalculateMatrix()
         {
-            return Matrix.CreateTranslation(-(int)mCameraSpec.mPosition.X, -(int)mCameraSpec.mPosition.Y, 0.0f);
+            return Matrix.CreateTranslation(-(int)mPosition.X, -(int)mPosition.Y, 0.0f);
         }
 
 
         /// <summary>
         /// Start the sprite batch
         /// </summary>
-        public void StartSpriteBatch(DrawInfo info, Vector2 viewPortSize)
+        public void StartSpriteBatch(DrawInfo info)
         {
             info.spriteBatch.Begin(mSpriteBatchOptions.mSortMode,
                                     mSpriteBatchOptions.mBlend,
@@ -113,14 +107,13 @@
                                     mSpriteBatchOptions.mDepthStencilState,
                                     mSpriteBatchOptions.mRasterizerState,
                                     null,
-                                    CalculateMatrix(viewPortSize));
+                                    CalculateMatrix());
         }
 
 
         /// <summary>
         /// End the sprite batch
         /// </summary>
-        /// <param name="info"></param>
         public void EndSpriteBatch(DrawInfo info)
         {
             info.spriteBatch.End();
@@ -132,16 +125,9 @@
 
 
 
-        #region rUtility
-        
-        /// <summary>
-        /// Set camera spec
-        /// </summary>
-        public void SetSpec(CameraSpec spec)
-        {
-            mCameraSpec = spec;
-        }
 
+
+        #region rUtility
 
         /// <summary>
         /// Set sprite batch options
@@ -153,20 +139,11 @@
 
 
         /// <summary>
-		/// Get the current spec
-		/// </summary>
-		public CameraSpec GetCurrentSpec()
-        {
-            return mCameraSpec;
-        }
-
-
-        /// <summary>
         /// Get position of camera
         /// </summary>
         public Vector2 GetPosition()
         {
-            return new Vector2(mCameraSpec.mPosition.X, mCameraSpec.mPosition.Y);
+            return new Vector2(mPosition.X, mPosition.Y);
         }
 
         #endregion rUtility

@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        const float SPEED = 3.0f;
+        const float SPEED = 10.0f;
         const int WIDTH = 16;
         const int HEIGHT = 16;
 
