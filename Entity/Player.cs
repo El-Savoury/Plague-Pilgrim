@@ -47,6 +47,7 @@
         /// <param name="content">Monogame content manager</param>
         public override void LoadContent(ContentManager content)
         {
+            mTexture = content.Load<Texture2D>("Boats/boat");
         }
 
         #endregion rInitialisation
@@ -60,11 +61,12 @@
 
 
         /// <summary>
-        /// Update player.
+        /// Update player
         /// </summary>
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
+            mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
             SetVelocity(CalcMovement());
 
             base.Update(gameTime);
@@ -122,11 +124,7 @@
         /// <param name="info">Info needed to draw</param>
         public override void Draw(DrawInfo info)
         {
-            info.spriteBatch.Draw(Main.GetDummyTexture(),
-                                  new Rectangle((int)mPosition.X,
-                                                (int)mPosition.Y,
-                                                WIDTH, HEIGHT),
-                                  Color.Red);
+            Draw2D.DrawTexture(info, mTexture, mPosition);
         }
 
         #endregion rDraw

@@ -96,6 +96,7 @@
             return mTileMapIndex;
         }
 
+
         /// <summary>
         /// Is this tile enabled?
         /// </summary>
@@ -103,6 +104,7 @@
         {
             return mEnabled;
         }
+
 
         /// <summary>
         /// Is this tile solid?
@@ -124,6 +126,7 @@
         }
 
         #endregion rUtility
+
 
 
 

@@ -19,7 +19,7 @@
 
         static Point MAP_SIZE = new Point(50, 400);
         static int GROUND_MAX_WIDTH = 10;
-        static int GROUND_MIN_WIDTH = 4;
+        static int GROUND_MIN_WIDTH = 5;
         static int MIN_SECTION_WIDTH = 2;
 
         #endregion rConstants
