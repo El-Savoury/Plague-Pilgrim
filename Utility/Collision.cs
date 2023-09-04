@@ -1,5 +1,50 @@
-﻿namespace Plague_Pilgrim
+﻿using System.Security.AccessControl;
+
+namespace Plague_Pilgrim
 {
+    enum CollisionType
+    {
+        Top,
+        Left,
+        Right,
+        Bottom,
+    }
+
+    /// <summary>
+    /// Results of a ray collision
+    /// </summary>
+    struct RayCollision
+    {
+        public Vector2 collisionPoint;
+        public Vector2 normal;
+        public float? t; // Time to point of contact from ray's origin, null if no contact
+
+        public static RayCollision None
+        {
+            get
+            {
+                RayCollision none;
+
+                none.collisionPoint = Vector2.Zero;
+                none.normal = Vector2.Zero;
+                none.t = null;
+
+                return none;
+            }
+        }
+        public bool Collided
+        {
+            get
+            {
+                return t.HasValue;
+            }
+        }
+    }
+
+
+
+
+
     /// <summary>
     /// Represents a finite ray in world space
     /// </summary>
@@ -73,6 +118,53 @@
         {
             return rect1.min.X <= rect2.max.X && rect2.min.X <= rect1.max.X &&
                 rect1.min.Y <= rect2.max.Y && rect2.min.Y <= rect1.max.Y;
+        }
+
+
+        public static RayCollision RayVsRect(Ray2f ray, Rect2f rect)
+        {
+            RayCollision results = new RayCollision();
+
+            // Get the intersection points wherever they land on each axis 
+            float Nx = (rect.min.X - ray.origin.X) - ray.direction.X;
+            float Ny = (rect.min.Y - ray.origin.Y) - ray.direction.Y;
+
+            float Fx = (rect.max.X - ray.origin.X) - ray.direction.X;
+            float Fy = (rect.max.Y - ray.origin.Y) - ray.direction.Y;
+
+            Vector2 tNear = new Vector2(Nx, Ny);
+            Vector2 tFar = new Vector2(Fx, Fy);
+
+            // Swap if far intersection point is closer than near point i.e the ray is going upwards 
+            if (tNear.X > tFar.X) { Utility.Swap(ref tNear.X, ref tFar.X); }
+            if (tNear.Y > tFar.Y) { Utility.Swap(ref tNear.Y, ref tFar.Y); }
+
+            // Return false if no collision with rectangle edges
+            if (tNear.X > tFar.Y || tNear.Y > tFar.X) return RayCollision.None;
+
+            // If there is a collision, calculate the near and far times to the actual intersections with the rectangle
+            float tHitNear = Math.Max(tNear.X, tNear.Y);
+            float tHitFar = Math.Min(tFar.X, tFar.Y);
+
+            // Ignore collisions that happen in the negative direction i.e behind the rays origin
+            if (tHitFar < 0.0f) return RayCollision.None;
+
+            // Assign the results of the collision
+            results.collisionPoint = ray.origin + tHitNear * ray.direction;
+
+            // Construct normal vector
+            if (tNear.X > tNear.Y) // Hit from x axis first
+            {
+                if (ray.direction.X < 0) { results.normal = new Vector2(1, 0); }
+                else { results.normal = new Vector2(-1, 0); }
+            }
+            else if (tNear.X > tNear.Y) // Hit from y axis first
+            {
+                if (ray.direction.Y < 0) { results.normal = new Vector2(0, 1); }
+                else { results.normal = new Vector2(0, -1); }
+            }
+
+            return results;
         }
     }
 }

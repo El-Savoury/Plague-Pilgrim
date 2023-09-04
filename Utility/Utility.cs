@@ -14,5 +14,14 @@
         {
             return (float)gameTime.ElapsedGameTime.TotalSeconds * 10.0f;
         }
+
+
+        /// <summary>
+        /// Swap two numbers using a tuple
+        /// </summary>
+        public static void Swap(ref float x, ref float y)
+        {
+            (x, y) = (y, x);
+        }
     }
 }
