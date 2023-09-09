@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     enum CollisionType
     {
@@ -121,6 +119,12 @@ namespace Plague_Pilgrim
         }
 
 
+        /// <summary>
+        /// Checks if a ray intersects a rectangle
+        /// </summary>
+        /// <param name="ray">Ray to check</param>
+        /// <param name="rect">Rectangle to check</param>
+        /// <returns>Collison results of intersection</returns>
         public static RayCollision RayVsRect(Ray2f ray, Rect2f rect)
         {
             RayCollision results = new RayCollision();
@@ -151,6 +155,7 @@ namespace Plague_Pilgrim
 
             // Assign the results of the collision
             results.collisionPoint = ray.origin + tHitNear * ray.direction;
+            results.t = tHitNear;
 
             // Construct normal vector
             if (tNear.X > tNear.Y) // Hit from x axis first
