@@ -18,11 +18,13 @@
 
 
 
+
         #region rMembers
 
         // Add members here
 
         #endregion rMembers
+
 
 
 
@@ -57,6 +59,8 @@
 
 
 
+
+
         #region rUpdate
 
 
@@ -67,7 +71,7 @@
         public override void Update(GameTime gameTime)
         {
             mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
-            SetVelocity(CalcMovement());
+            SetVelocity(CalcDirection() * SPEED);
 
             base.Update(gameTime);
         }
@@ -77,38 +81,25 @@
         /// Calculate player movement based on directional input 
         /// </summary>
         /// <returns>Vector representing distance and direction to move</returns>
-        private Vector2 CalcMovement()
+        private Vector2 CalcDirection()
         {
             Vector2 inputDir = Vector2.Zero;
 
-            if (InputManager.KeyHeld(Controls.Left))
-            {
-                inputDir.X -= 1;
-            }
+            if (InputManager.KeyHeld(Controls.Left)) { inputDir.X -= 1; }
 
-            if (InputManager.KeyHeld(Controls.Right))
-            {
-                inputDir.X += 1;
-            }
-            if (InputManager.KeyHeld(Controls.Up))
-            {
-                inputDir.Y -= 1;
-            }
+            if (InputManager.KeyHeld(Controls.Right)) { inputDir.X += 1; }
 
-            if (InputManager.KeyHeld(Controls.Down))
-            {
-                inputDir.Y += 1;
-            }
+            if (InputManager.KeyHeld(Controls.Up)) { inputDir.Y -= 1; }
 
-            if (inputDir != Vector2.Zero)
-            {
-                inputDir.Normalize();
-            }
+            if (InputManager.KeyHeld(Controls.Down)) { inputDir.Y += 1; }
 
-            return inputDir * SPEED;
+            if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
+
+            return inputDir;
         }
 
         #endregion rUpdate
+
 
 
 
@@ -125,6 +116,10 @@
         public override void Draw(DrawInfo info)
         {
             Draw2D.DrawTexture(info, mTexture, mPosition);
+
+            // Draw ray in movement direction for collison debugging
+            Draw2D.DrawLine(info, GetCentrePos(), GetCentrePos() + (GetDirection() * 100), Color.White, 2);
+
         }
 
         #endregion rDraw

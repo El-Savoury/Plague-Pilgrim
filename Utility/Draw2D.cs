@@ -81,12 +81,26 @@
         }
 
 
-        public static DrawLine(DrawInfo info, Vector2 point1, Vector2 point2, Color colour, float thickness = 1.0f)
+        /// <summary>
+        /// Draw a line from point A to B
+        /// </summary>
+        public static void DrawLine(DrawInfo info, Vector2 point1, Vector2 point2, Color color, float thickness = 1.0f)
         {
             float distance = Vector2.Distance(point1, point2);
+            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            DrawLine(info, point1, distance, angle, color, thickness);
+        }
 
 
-            DrawRect(info, new Rectangle())
+
+        /// <summary>
+        /// Draw a line from point A by an angle.
+        /// </summary>
+        public static void DrawLine(DrawInfo info, Vector2 point, float length, float angle, Color color, float thickness = 1.0f)
+        {
+            var origin = new Vector2(0f, 0.5f);
+            var scale = new Vector2(length, thickness);
+            info.spriteBatch.Draw(Main.GetDummyTexture(), point, null, color, angle, origin, scale, SpriteEffects.None, 0);
         }
 
         #endregion rRender

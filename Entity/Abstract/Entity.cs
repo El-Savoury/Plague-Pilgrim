@@ -55,14 +55,11 @@
 
 
         /// <summary>
-        /// React to a collision with this entity
+        /// React to a collision with another entity
         /// </summary>
-        /// <param name="entity"></param>
-        public virtual void CollideWithEntity(Entity entity)
-        {
-            // Default: Do nothing
-        }
-
+        /// <param name="entity">Entity that is colliding with us</param>
+        public abstract void OnCollideEntity(Entity entity);
+        
         #endregion rUpdate
 
 
@@ -123,6 +120,7 @@
 
         }
 
+        
         /// <summary>
         /// Enable/Disable this entity. Disabled entities will not be drawn or updated
         /// </summary>

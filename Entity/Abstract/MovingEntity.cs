@@ -48,12 +48,39 @@
 
         #region rUpdate
 
+        /// <summary>
+        /// Update moving entity
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
             ApplyVelocity(gameTime);
 
             base.Update(gameTime);
         }
+
+
+
+        /// <summary>
+        /// Handle all collisions
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
+        private void UpdateCollision(GameTime gameTime)
+        {
+            // List of all genuine collisions. A collision can be detected but never actually happen
+            // E.g. We are going to collide with a wall but a block is in the way
+            List<EntityCollision> collisionList = new List<EntityCollision>();
+
+           // EntityCollision currentCollision = EntityManager.GetNextCollision(gameTime, entity);
+        }
+
+
+        /// <summary>
+        /// Resolve collision with specific normal
+        /// </summary>
+        /// <param name="collisionNormal">Specific side of object being hit</param>
+        public abstract void ReactToCollision(Vector2 collisionNormal);
+        
 
         #endregion rUpdate
 
@@ -100,6 +127,18 @@
         public void SetVelocity(Vector2 vel)
         {
             mVelocity = vel;
+        }
+
+
+        /// <summary>
+        /// Get direction entity is moving
+        /// </summary>
+        /// <returns>Normalised direciton vector</returns>s
+        public Vector2 GetDirection()
+        {
+            Vector2 nextPos = GetCentrePos() + mVelocity;
+
+            return Vector2.Normalize(nextPos - GetCentrePos());
         }
 
         #endregion rUtility

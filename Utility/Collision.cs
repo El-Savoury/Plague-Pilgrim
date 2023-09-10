@@ -11,17 +11,17 @@
     /// <summary>
     /// Results of a ray collision
     /// </summary>
-    struct RayCollision
+    struct CollisionResults
     {
         public Vector2 collisionPoint;
         public Vector2 normal;
         public float? t; // Time to point of contact from ray's origin, null if no contact
 
-        public static RayCollision None
+        public static CollisionResults None
         {
             get
             {
-                RayCollision none;
+                CollisionResults none;
 
                 none.collisionPoint = Vector2.Zero;
                 none.normal = Vector2.Zero;
@@ -125,9 +125,9 @@
         /// <param name="ray">Ray to check</param>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>Collison results of intersection</returns>
-        public static RayCollision RayVsRect(Ray2f ray, Rect2f rect)
+        public static CollisionResults RayVsRect(Ray2f ray, Rect2f rect)
         {
-            RayCollision results = new RayCollision();
+            CollisionResults results = new CollisionResults();
 
             // Get the intersection points wherever they land on each axis 
             float Nx = (rect.min.X - ray.origin.X) - ray.direction.X;
@@ -144,14 +144,14 @@
             if (tNear.Y > tFar.Y) { Utility.Swap(ref tNear.Y, ref tFar.Y); }
 
             // Return false if no collision with rectangle edges
-            if (tNear.X > tFar.Y || tNear.Y > tFar.X) return RayCollision.None;
+            if (tNear.X > tFar.Y || tNear.Y > tFar.X) return CollisionResults.None;
 
             // If there is a collision, calculate the near and far times to the actual intersections with the rectangle
             float tHitNear = Math.Max(tNear.X, tNear.Y);
             float tHitFar = Math.Min(tFar.X, tFar.Y);
 
             // Ignore collisions that happen in the negative direction i.e behind the rays origin
-            if (tHitFar < 0.0f) return RayCollision.None;
+            if (tHitFar < 0.0f) return CollisionResults.None;
 
             // Assign the results of the collision
             results.collisionPoint = ray.origin + tHitNear * ray.direction;

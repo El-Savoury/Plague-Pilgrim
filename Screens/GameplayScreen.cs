@@ -9,6 +9,7 @@
 
         Player mPlayer;
         Camera mCamera;
+        Rect2f mRect;
 
         #endregion rMembers
 
@@ -26,6 +27,8 @@
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
             TileManager.InitTileMap(Vector2.Zero);
+
+            mRect = new Rect2f(new Vector2(20, 20), new Vector2(100, 100));
         }
 
 
@@ -60,7 +63,14 @@
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
             mPlayer.Update(gameTime);
-            mCamera.Update(gameTime);
+            //mCamera.Update(gameTime);
+
+            Ray2f ray = new Ray2f(mPlayer.GetCentrePos(), mPlayer.GetDirection());
+
+            if (Collision.RayVsRect(ray,mRect).Collided)
+            {
+               
+            }
         }
 
         #endregion rUpdate
@@ -82,11 +92,16 @@
             info.device.SetRenderTarget(mScreenTarget);
             info.device.Clear(Color.CornflowerBlue);
 
-
-
             mCamera.StartSpriteBatch(info);
+
             TileManager.Draw(info);
+
+
+            Draw2D.DrawRect(info, mRect, Color.Blue);
+
+
             mPlayer.Draw(info);
+
             mCamera.EndSpriteBatch(info);
 
             return mScreenTarget;
