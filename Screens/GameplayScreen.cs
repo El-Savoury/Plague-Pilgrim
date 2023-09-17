@@ -67,7 +67,7 @@
 
             Ray2f ray = new Ray2f(mPlayer.GetCentrePos(), mPlayer.GetDirection());
 
-            if (Collision.RayVsRect(ray,mRect).Collided)
+            if (Collision2D.RayVsRect(ray,mRect).Collided)
             {
                
             }

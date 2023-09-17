@@ -67,9 +67,6 @@
     /// </summary>
     struct Rect2f
     {
-        public Vector2 min;
-        public Vector2 max;
-
         public Rect2f(Vector2 vec1, Vector2 vec2)
         {
             min = new Vector2(MathF.Min(vec1.X, vec2.X), MathF.Min(vec1.Y, vec2.Y));
@@ -81,6 +78,54 @@
             min = new Vector2(rect.X, rect.Y);
             max = new Vector2(rect.X + rect.Width, rect.Y + rect.Height);
         }
+
+        public Rect2f(Vector2 _min, Texture2D texture)
+        {
+            min = _min;
+            max = new Vector2(_min.X + texture.Width, _min.Y + texture.Height);
+        }
+
+        public Rect2f(Vector2 _min, float width, float height)
+        {
+            min = _min;
+            max = new Vector2(_min.X + width, _min.Y + height);
+        }
+
+        public float Width
+        {
+            get { return Math.Abs(max.X - min.X); }
+        }
+
+        public float Height
+        {
+            get { return Math.Abs(max.Y - min.Y); }
+        }
+
+        public Vector2 Centre
+        {
+            get { return (min + max) / 2.0f; }
+        }
+
+        public static Rect2f operator +(Rect2f a, Rect2f b)
+        {
+            float minX = Math.Min(a.min.X, b.min.X);
+            float minY = Math.Min(a.min.Y, b.min.Y);
+            float maxX = Math.Max(a.max.X, b.max.X);
+            float maxY = Math.Max(a.max.Y, b.max.Y);
+
+            return new Rect2f(new Vector2(minX, minY), new Vector2(maxX, maxY));
+        }
+
+        public static Rect2f operator +(Rect2f rect, Vector2 vec)
+        {
+            rect.min += vec;
+            rect.max += vec;
+
+            return rect;
+        }
+
+        public Vector2 min;
+        public Vector2 max;
     }
 
 
@@ -91,7 +136,7 @@
     /// <summary>
     /// Utility methods for handling collisions
     /// </summary>
-    static class Collision
+    static class Collision2D
     {
         /// <summary>
         /// Check if a point is within a rectangle
@@ -170,6 +215,27 @@
             }
 
             return results;
+        }
+
+
+        /// <summary>
+		/// Compare if moving a rectangle will hit another rectangle
+		/// </summary>
+		/// <param name="movingRect">Rectangle that will be moving</param>
+		/// <param name="displacement">How far it is moving</param>
+		/// <param name="targetRect">Rectangle that is static</param>
+		/// <returns>Collision results of collision</returns>
+        public static CollisionResults MovingRectVsRect(Rect2f movingRect, Vector2 displacement, Rect2f targetRect)
+        {
+            if (displacement == Vector2.Zero) { return CollisionResults.None; }
+
+            //Expand target rectangle
+            Vector2 sizeVec = new Vector2(movingRect.Width * 0.5f, movingRect.Height * 0.5f);
+
+            targetRect.min -= sizeVec;
+            targetRect.max += sizeVec;
+
+            return RayVsRect(new Ray2f(movingRect.Centre, displacement), targetRect);
         }
     }
 }

@@ -20,6 +20,7 @@
         #region rMembers
 
         protected Vector2 mVelocity;
+        protected Vector2 mPrevVelocity;
 
         #endregion rMembers
 
@@ -54,7 +55,8 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            ApplyVelocity(gameTime);
+            mPrevVelocity = mVelocity;
+            UpdateCollision(gameTime);
 
             base.Update(gameTime);
         }
@@ -71,7 +73,43 @@
             // E.g. We are going to collide with a wall but a block is in the way
             List<EntityCollision> collisionList = new List<EntityCollision>();
 
-           // EntityCollision currentCollision = EntityManager.GetNextCollision(gameTime, entity);
+            // Get first collision in list
+            EntityCollision currentCollision = EntityManager.GetNextCollision(gameTime, this);
+
+            while (currentCollision != null)
+            {
+                EntityCollision entityCollision = currentCollision;
+                CollisionResults collisionResults = entityCollision.GetResults();
+
+                // Get the amount we have intersected the other entity by
+                Vector2 intersect = new Vector2(Math.Abs(mVelocity.X), Math.Abs(mVelocity.Y) * (1.0f - collisionResults.t.Value));
+
+                // Move position back outside of entity we have collided with 
+                Vector2 pushVec = collisionResults.normal * intersect;
+                mVelocity += pushVec;
+
+                // Check for bugged collisions
+                if (collisionList.Count > COLLISION_MAX_COUNT)
+                {
+                    // Fail-safe, don't move
+                    mVelocity = Vector2.Zero;
+
+                    // Clear list of stuck collision
+                    collisionList.Clear();
+                    break;
+                }
+
+                // Get the next collision happening to this entity from the list
+                currentCollision = EntityManager.GetNextCollision(gameTime, this);
+            }
+
+            ApplyVelocity(gameTime);
+
+            // React to each collision
+            foreach (EntityCollision entityCollision in collisionList)
+            {
+                entityCollision.PostCollisionReact(this);
+            }
         }
 
 
@@ -80,7 +118,7 @@
         /// </summary>
         /// <param name="collisionNormal">Specific side of object being hit</param>
         public abstract void ReactToCollision(Vector2 collisionNormal);
-        
+
 
         #endregion rUpdate
 
@@ -92,10 +130,10 @@
         #region rUtility
 
         /// <summary>
-		/// Move position by velocity
-		/// </summary>
-		/// <param name="gameTime">Frame time</param>
-		protected void ApplyVelocity(GameTime gameTime)
+        /// Move position by velocity
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
+        protected void ApplyVelocity(GameTime gameTime)
         {
             mPosition += VelocityToDisplacement(gameTime);
         }

@@ -1,4 +1,6 @@
-﻿namespace Plague_Pilgrim
+﻿using System.Text;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Info required to init tile map
@@ -29,6 +31,7 @@
 
 
 
+
         #region rMembers
 
         static Tile[,] mTileMap;
@@ -37,6 +40,7 @@
         static int mTileSize;
 
         #endregion rMembers
+
 
 
 
@@ -95,7 +99,7 @@
 
             int nextMove = 0; // Used to determine which direction to go
             int sectionWidth = 0; // Used to keep track of the current sections width
-            
+
             // Cycle through our widths
             for (int i = 0; i < widths.Length; i++)
             {
@@ -124,6 +128,11 @@
 
 
 
+
+
+
+
+
         #region rUpdate
 
         public static void Update(GameTime gameTime)
@@ -131,6 +140,7 @@
         }
 
         #endregion rUdate
+
 
 
 
@@ -168,6 +178,70 @@
         }
 
         #endregion rDraw
+
+
+
+
+
+
+
+
+        #region rCollisions
+
+        /// <summary>
+        /// Resolve all collisions with an entity
+        /// </summary>
+        /// <param name="gameTime">Entity to collide</param>
+        /// <param name="entity">Frame time</param>
+        /// <param name="outputList">List of all collisions</param>
+        public static void GatherCollisions(GameTime gameTime, MovingEntity entity, ref List<EntityCollision> outputList)
+        {
+            // Get players position in next frame
+            Rect2f playerBounds = entity.ColliderBounds();
+            Rect2f futurePlayerBounds = entity.ColliderBounds() + entity.VelocityToDisplacement(gameTime);
+
+            // Define rectangle encompassing all tiles between the players current position and future position in next frame
+            Rectangle tileBounds = PossibleIntersectTiles(playerBounds + futurePlayerBounds);
+
+            // Check all tiles within rectangle for collisions
+            for (int x = tileBounds.X; x <= tileBounds.X + tileBounds.Width; x++)
+            {
+                for (int y = tileBounds.Y; y <= tileBounds.Y + tileBounds.Height; y++)
+                {
+                    if (mTileMap[x, y].GetEnabled() == false) { continue; }
+
+                    CollisionResults collisionResults = mTileMap[x, y].Collide(entity, gameTime);
+
+                    if (collisionResults.Collided)
+                    {
+                        outputList.Add(new TileEntityCollision(collisionResults, new Point(x, y)));
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Find rectangle containing all possible tiles that an object will intersect with
+        /// </summary>
+        /// <param name="box">Collision box of object to check</param>
+        /// <returns>Rectangle of indices to tiles</returns>
+        private static Rectangle PossibleIntersectTiles(Rect2f box)
+        {
+            // Get tilemap index of top left and bottom right tiles in box
+            box.min = (box.min - mTileMapPos) / mTileSize;
+            box.max = (box.max - mTileMapPos) / mTileSize;
+
+            Point rectMin = new Point(Math.Max((int)box.min.X - 1, 0), Math.Max((int)box.min.Y - 1, 0));
+            Point rectMax = new Point(Math.Min((int)box.max.X + 2, mTileMap.GetLength(0) - 1), Math.Min((int)box.max.Y + 2, mTileMap.GetLength(1) - 1));
+
+            // Return a rectangle with size in number of tiles. (rectMin - rectMax gets the number of tiles between the two points rather than all tiles frome top left of tile map)
+            return new Rectangle(rectMin, rectMax - rectMin);
+        }
+
+        #endregion rCollisionss
+
+
 
 
 

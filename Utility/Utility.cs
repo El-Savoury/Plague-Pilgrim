@@ -23,5 +23,43 @@
         {
             (x, y) = (y, x);
         }
+
+
+        /// <summary>
+        /// Gets the maximum in a list
+        /// </summary>
+        public static T GetMax<T>(ref List<T> list, IComparer<T> comparer)
+        {
+            T maxValue = list[0];
+
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (comparer.Compare(list[i], maxValue) > 0)
+                {
+                    maxValue = list[i];
+                }
+            }
+
+            return maxValue;
+        }
+
+
+        /// <summary>
+        /// Gets the minimum in a list
+        /// </summary>
+        public static T GetMin<T>(ref List<T> list, IComparer<T> comparer)
+        {
+            T minValue = list[0];
+
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (comparer.Compare(list[i], minValue) < 0)
+                {
+                    minValue = list[i];
+                }
+            }
+
+            return minValue;
+        }
     }
 }

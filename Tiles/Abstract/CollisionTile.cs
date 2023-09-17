@@ -17,7 +17,7 @@
         /// <param name="gameTime">Frame time</param>
         public virtual bool Collide(MovingEntity entity, GameTime gameTime)
         {
-            return Collision.RectVsRect(entity.ColliderBounds(), GetBounds());
+            return Collision2D.RectVsRect(entity.ColliderBounds(), GetBounds());
         }
 
 
