@@ -3,9 +3,9 @@
     /// <summary>
     /// A collidable tile with square hitbox
     /// </summary>
-    abstract class CollisionTile : Tile
+    abstract class SolidTile : Tile
     {
-        public CollisionTile(Vector2 position) : base(position)
+        public SolidTile(Vector2 position) : base(position)
         {
         }
 
@@ -15,9 +15,9 @@
         /// </summary>
         /// <param name="entity">Entity that is colliding with us</param>
         /// <param name="gameTime">Frame time</param>
-        public virtual bool Collide(MovingEntity entity, GameTime gameTime)
+        public override CollisionResults Collide(MovingEntity entity, GameTime gameTime)
         {
-            return Collision2D.RectVsRect(entity.ColliderBounds(), GetBounds());
+            return Collision2D.MovingRectVsRect(entity.ColliderBounds(), entity.VelocityToDisplacement(gameTime), GetBounds());
         }
 
 

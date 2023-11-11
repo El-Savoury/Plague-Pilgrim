@@ -26,17 +26,15 @@
 
 
 
-        #region rUpdate
+        #region rCollision
 
-        /// <summary>
-        /// Update tile
-        /// </summary>
-        /// <param name="gameTime">Frame time</param>
-        public override void Update(GameTime gameTime)
+        public override CollisionResults Collide(MovingEntity entity, GameTime gameTime)
         {
+            // No Collision
+            return CollisionResults.None;
         }
 
-        #endregion rUpdate
+        #endregion rCollision
 
 
 

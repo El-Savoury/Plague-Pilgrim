@@ -114,11 +114,20 @@
 
 
         /// <summary>
+        /// Move position by velocity
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
+        protected void ApplyVelocity(GameTime gameTime)
+        {
+            mPosition += VelocityToDisplacement(gameTime);
+        }
+
+
+        /// <summary>
         /// Resolve collision with specific normal
         /// </summary>
         /// <param name="collisionNormal">Specific side of object being hit</param>
         public abstract void ReactToCollision(Vector2 collisionNormal);
-
 
         #endregion rUpdate
 
@@ -128,15 +137,6 @@
 
 
         #region rUtility
-
-        /// <summary>
-        /// Move position by velocity
-        /// </summary>
-        /// <param name="gameTime">Frame time</param>
-        protected void ApplyVelocity(GameTime gameTime)
-        {
-            mPosition += VelocityToDisplacement(gameTime);
-        }
 
 
         /// <summary>

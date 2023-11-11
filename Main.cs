@@ -146,7 +146,7 @@
                 GraphicsDevice.SetRenderTarget(null);
 
 
-                mSpriteBatch.Begin(SpriteSortMode.FrontToBack,
+                mSpriteBatch.Begin(SpriteSortMode.BackToFront,
                                                         BlendState.AlphaBlend,
                                                         SamplerState.PointClamp,
                                                         DepthStencilState.Default,

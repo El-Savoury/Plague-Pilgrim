@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Info required to init tile map
@@ -19,7 +17,7 @@ namespace Plague_Pilgrim
     {
         #region rConstants
 
-        static Point MAP_SIZE = new Point(50, 400);
+        static Point MAP_SIZE = new Point(20, 20);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 5;
         static int MIN_SECTION_WIDTH = 2;
@@ -69,21 +67,13 @@ namespace Plague_Pilgrim
             int[] bankLeft = GetBankWidths();
             int[] bankRight = GetBankWidths();
 
-            for (int y = 0; y < mTileMap.GetLength(1); y++)
+            for (int y = 0; y < mTileMap.GetLength(0); y++)
             {
                 for (int x = 0; x < mTileMap.GetLength(0); x++)
                 {
-                    Vector2 tileTopLeft = GetTileTopLeft(new Point(x, y));
+                    Vector2 tilePos = new Vector2(mTileMapPos.X + x * mTileSize, mTileMapPos.Y - y * mTileSize);
 
-                    if (x < bankLeft[y] || x >= mTileMap.GetLength(0) - bankRight[y])
-                    {
-                        mTileMap[x, y] = new GroundTile(tileTopLeft);
-                    }
-                    else
-                    {
-                        mTileMap[x, y] = new EmptyTile(tileTopLeft);
-                    }
-
+                    mTileMap[x, y] = new EmptyTile(tilePos);
                     mTileMap[x, y].LoadContent();
                 }
             }
@@ -152,16 +142,23 @@ namespace Plague_Pilgrim
 
         public static void Draw(DrawInfo info)
         {
-            Point offset = new Point((int)mTileMapPos.X, (int)mTileMapPos.Y);
+            Point mapPos = new Point((int)mTileMapPos.X, (int)mTileMapPos.Y);
 
-            for (int x = 0; x < mTileMap.GetLength(0); x++)
+            foreach (Tile tile in mTileMap)
             {
-                for (int y = 0; y < mTileMap.GetLength(1); y++)
-                {
-                    Rectangle drawRect = new Rectangle(offset.X + x * mTileSize, offset.Y + y * mTileSize, mTileSize, mTileSize);
-                    DrawTile(info, drawRect, mTileMap[x, y]);
-                }
+                Rectangle sourceRect = new Rectangle((int)tile.GetBounds().min.X, (int)tile.GetBounds().min.Y, mTileSize, mTileSize);
+                DrawTile(info, sourceRect, tile);
             }
+
+
+            //for (int x = 0; x < mTileMap.GetLength(0); x++)
+            //{
+            //    for (int y = 0; y < mTileMap.GetLength(1); y++)
+            //    {
+            //        Rectangle drawRect = new Rectangle(mapPos.X + x * mTileSize, mapPos.Y - y * mTileSize, mTileSize, mTileSize);
+            //        DrawTile(info, drawRect, mTileMap[x, y]);
+            //    }
+            //}
         }
 
 
@@ -173,7 +170,7 @@ namespace Plague_Pilgrim
         /// <param name="tile"></param>
         private static void DrawTile(DrawInfo info, Rectangle drawDestination, Tile tile)
         {
-            Rectangle sourceRect = new Rectangle(tile.GetMapIndex().X * mTileSize, tile.GetMapIndex().Y * mTileSize, mTileSize, mTileSize);
+            //Rectangle sourceRect = new Rectangle(tile.GetMapIndex().X * mTileSize, tile.GetMapIndex().Y * mTileSize, mTileSize, mTileSize);
             Draw2D.DrawTexture(info, tile.GetTexture(), new Vector2(drawDestination.X, drawDestination.Y));
         }
 
@@ -319,7 +316,7 @@ namespace Plague_Pilgrim
         /// </summary>
         /// <param name="index">Tile map index of tile</param>
         /// <returns>Tiles top left corner position</returns>
-        public static Vector2 GetTileTopLeft(Point index)
+        public static Vector2 GetTilePos(Point index)
         {
             Vector2 result = mTileMapPos;
 

@@ -34,7 +34,7 @@
         {
             get
             {
-                return t.HasValue;
+                return /*t.HasValue*/ t > 0 && t < 1;
             }
         }
     }

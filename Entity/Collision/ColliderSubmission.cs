@@ -96,7 +96,7 @@
 
 
         /// <summary>
-        /// Get reults of collision with other entity
+        /// Get results of collision with other entity
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="entity"></param>

@@ -9,7 +9,7 @@ namespace Plague_Pilgrim
     {
         public SpriteBatchOptions()
         {
-            mSortMode = SpriteSortMode.FrontToBack;
+            mSortMode = SpriteSortMode.BackToFront;
             mBlend = BlendState.AlphaBlend;
             mSamplerState = SamplerState.PointClamp;
             mDepthStencilState = DepthStencilState.Default;
@@ -31,9 +31,6 @@ namespace Plague_Pilgrim
     {
         #region rConstants
 
-        private float SPEED = 3.0f;
-        private float MIN_POS = 0.0f;
-
         #endregion rConstants
 
 
@@ -41,9 +38,11 @@ namespace Plague_Pilgrim
         #region rMembers
 
         private Vector2 mPosition;
+        private MovingEntity mTargetEntity;
         private SpriteBatchOptions mSpriteBatchOptions;
 
         #endregion rMembers
+
 
 
 
@@ -65,6 +64,8 @@ namespace Plague_Pilgrim
 
 
 
+
+
         #region rUpdate
 
         /// <summary>
@@ -72,11 +73,13 @@ namespace Plague_Pilgrim
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            mPosition.Y -= SPEED * Utility.GetDeltaTime(gameTime);
-
-            if (mPosition.Y < MIN_POS) { mPosition.Y = MIN_POS; }
+            if (mTargetEntity.GetVelocity() != Vector2.Zero)
+            {
+                mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
+            }
         }
         #endregion rUpdate
+
 
 
 
@@ -127,6 +130,7 @@ namespace Plague_Pilgrim
 
 
 
+
         #region rUtility
 
         /// <summary>
@@ -144,6 +148,15 @@ namespace Plague_Pilgrim
         public Vector2 GetPosition()
         {
             return new Vector2(mPosition.X, mPosition.Y);
+        }
+
+
+        /// <summary>
+        /// Set entity for camera to follow.
+        /// </summary>
+        public void TargetEntity(MovingEntity entity)
+        {
+            mTargetEntity = entity;
         }
 
         #endregion rUtility

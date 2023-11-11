@@ -3,7 +3,7 @@
     /// <summary>
     /// Tile representing the ground
     /// </summary>
-    internal class GroundTile : Tile
+    internal class GroundTile : SolidTile
     {
 
         #region rInitialisation

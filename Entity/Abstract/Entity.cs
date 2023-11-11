@@ -34,7 +34,7 @@
         /// Load content for entity such as textures
         /// </summary>
         /// <param name="content">Monogame content manager</param>
-        public abstract void LoadContent(ContentManager content);
+        public abstract void LoadContent();
 
         #endregion mInitialsation
 
@@ -55,11 +55,21 @@
 
 
         /// <summary>
+        /// Trigger event when interacted with
+        /// </summary>
+        protected virtual void OnPlayerInteract()
+        {
+
+        }
+
+
+        /// <summary>
         /// React to a collision with another entity
         /// </summary>
         /// <param name="entity">Entity that is colliding with us</param>
         public abstract void OnCollideEntity(Entity entity);
         
+
         #endregion rUpdate
 
 
@@ -120,7 +130,7 @@
 
         }
 
-        
+
         /// <summary>
         /// Enable/Disable this entity. Disabled entities will not be drawn or updated
         /// </summary>

@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        private int TILE_SIZE = 16;
+        public static int TILE_SIZE = 24;
 
         #endregion rConstants
 
@@ -17,7 +17,7 @@
 
         #region rMembers
 
-        private Vector2 mPosition;
+        protected Vector2 mPosition;
         protected Texture2D mTexture;
         protected bool mEnabled = true;
         protected Point mTileMapIndex;
@@ -58,7 +58,9 @@
         /// Update tile
         /// </summary>
         /// <param name="gameTime">Frame time</param>
-        public abstract void Update(GameTime gameTime);
+        public virtual void Update(GameTime gameTime)
+        {
+        }
 
         #endregion rUpdate
 

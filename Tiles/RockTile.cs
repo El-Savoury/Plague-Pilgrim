@@ -3,7 +3,7 @@
     /// <summary>
     /// Tile representing a rock
     /// </summary>
-    internal class RockTile : Tile
+    internal class RockTile : SolidTile
     {
 
         #region rInitialisation

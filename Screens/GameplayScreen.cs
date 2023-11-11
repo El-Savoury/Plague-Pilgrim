@@ -9,7 +9,6 @@
 
         Player mPlayer;
         Camera mCamera;
-        Rect2f mRect;
 
         #endregion rMembers
 
@@ -26,9 +25,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            TileManager.InitTileMap(Vector2.Zero);
-
-            mRect = new Rect2f(new Vector2(20, 20), new Vector2(100, 100));
+            TileManager.InitTileMap(new Vector2(0, -Tile.TILE_SIZE));
         }
 
 
@@ -38,11 +35,14 @@
         public override void LoadContent()
         {
             TileManager.LoadTileMap();
+            
+            // Spawn player in middle tile, bottom row 
+            Point spawnTile = new Point(TileManager.GetSize().X / 2, -1);
+            mPlayer = new Player(TileManager.GetTilePos(spawnTile));
+            mPlayer.LoadContent();
 
-            mPlayer = new Player(TileManager.GetTileTopLeft(new Point(TileManager.GetSize().X / 2, TileManager.GetSize().Y - 1))); // Spawn player in middle tile of tile map bottom row 
-            mPlayer.LoadContent(Main.GetContentManager());
-
-            mCamera = new Camera(new Vector2(0.0f, mPlayer.GetPosition().Y + 16 - GetScreenSize().Height));
+            mCamera = new Camera(new Vector2(0, -GetScreenSize().Height));
+            mCamera.TargetEntity(mPlayer);
         }
 
         #endregion rInitialisation
@@ -62,15 +62,9 @@
         {
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
+            mCamera.Update(gameTime);
             mPlayer.Update(gameTime);
-            //mCamera.Update(gameTime);
-
-            Ray2f ray = new Ray2f(mPlayer.GetCentrePos(), mPlayer.GetDirection());
-
-            if (Collision2D.RayVsRect(ray,mRect).Collided)
-            {
-               
-            }
+            
         }
 
         #endregion rUpdate
@@ -95,11 +89,6 @@
             mCamera.StartSpriteBatch(info);
 
             TileManager.Draw(info);
-
-
-            Draw2D.DrawRect(info, mRect, Color.Blue);
-
-
             mPlayer.Draw(info);
 
             mCamera.EndSpriteBatch(info);
