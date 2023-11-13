@@ -17,7 +17,7 @@
     {
         #region rConstants
 
-        static Point MAP_SIZE = new Point(20, 20);
+        static Point MAP_SIZE = new Point(20, 400);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 5;
         static int MIN_SECTION_WIDTH = 2;
@@ -67,7 +67,7 @@
             int[] bankLeft = GetBankWidths();
             int[] bankRight = GetBankWidths();
 
-            for (int y = 0; y < mTileMap.GetLength(0); y++)
+            for (int y = 0; y < mTileMap.GetLength(1); y++)
             {
                 for (int x = 0; x < mTileMap.GetLength(0); x++)
                 {

@@ -1,4 +1,7 @@
-﻿using System.Reflection.Metadata;
+﻿using MonoGame.OpenGL;
+using System.Diagnostics;
+using System.Reflection.Metadata;
+using System.Security.Principal;
 
 namespace Plague_Pilgrim
 {
@@ -9,7 +12,7 @@ namespace Plague_Pilgrim
     {
         #region rConstants
 
-        const float SPEED = 10.0f;
+        const float SPEED = 15.0f;
 
         #endregion rConstants
 
@@ -72,12 +75,10 @@ namespace Plague_Pilgrim
         {
             mVelocity = new Vector2(0, -3);
 
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 10; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 10; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 10; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 15; }
-
-            ClampToScreen();
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= SPEED; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += SPEED; }
+            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= SPEED; }
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += SPEED; }
 
             base.Update(gameTime);
         }
@@ -124,7 +125,7 @@ namespace Plague_Pilgrim
             Draw2D.DrawTexture(info, mTexture, mPosition);
 
             // Draw ray in movement direction for collison debugging
-            Draw2D.DrawLine(info, GetCentrePos(), GetCentrePos() + (GetDirection() * 100), Color.White, 2);
+            // Draw2D.DrawLine(info, GetCentrePos(), GetCentrePos() + (GetDirection() * 100), Color.White, 2);
 
         }
 
@@ -160,13 +161,18 @@ namespace Plague_Pilgrim
 
 
 
+
+
+
+
         #region mUtility
 
-        private void ClampToScreen()
+        public void ClamptoCameraView(Camera cam)
         {
-            Rectangle view = Main.GetGraphicsDevice().Viewport.Bounds;
+            Rect2f view = new Rect2f(cam.GetPos(), 800, 800);
 
-            if (ColliderBounds().max.X > 800) { mPosition.X -= mTexture.Width /2 ; }
+            mPosition.X = Math.Clamp(mPosition.X, view.min.X, view.max.X - mTexture.Width);
+            mPosition.Y = Math.Clamp(mPosition.Y, view.min.Y, view.max.Y - mTexture.Height);
         }
 
         #endregion mUtility

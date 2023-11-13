@@ -57,7 +57,7 @@
         {
             mPrevVelocity = mVelocity;
             UpdateCollision(gameTime);
-
+            
             base.Update(gameTime);
         }
 

@@ -101,7 +101,10 @@
         /// <param name="gameTime"></param>
         protected override void Update(GameTime gameTime)
         {
-            //Update active screen
+            // Record elapsed time
+            TimeManager.Update(gameTime);
+
+            // Update active screen.
             Screen screen = ScreenManager.GetActiveScreen();
 
             InputManager.Update(gameTime);

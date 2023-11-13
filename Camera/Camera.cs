@@ -145,7 +145,7 @@ namespace Plague_Pilgrim
         /// <summary>
         /// Get position of camera
         /// </summary>
-        public Vector2 GetPosition()
+        public Vector2 GetPos()
         {
             return new Vector2(mPosition.X, mPosition.Y);
         }

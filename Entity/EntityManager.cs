@@ -238,5 +238,11 @@
         }
 
         #endregion rEntityRegistry
+
+
+
+        #region rFactory
+
+        #endregion rFactory
     }
 }

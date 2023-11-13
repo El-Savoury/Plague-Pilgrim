@@ -9,6 +9,7 @@
 
         Player mPlayer;
         Camera mCamera;
+        Timer mTimer;
 
         #endregion rMembers
 
@@ -34,8 +35,12 @@
         /// </summary>
         public override void LoadContent()
         {
+            mTimer = new Timer();
+            TimeManager.RegisterTimer(mTimer);
+            mTimer.Start();
+
             TileManager.LoadTileMap();
-            
+
             // Spawn player in middle tile, bottom row 
             Point spawnTile = new Point(TileManager.GetSize().X / 2, -1);
             mPlayer = new Player(TileManager.GetTilePos(spawnTile));
@@ -64,7 +69,8 @@
 
             mCamera.Update(gameTime);
             mPlayer.Update(gameTime);
-            
+            mPlayer.ClamptoCameraView(mCamera);
+
         }
 
         #endregion rUpdate
@@ -105,6 +111,17 @@
 
 
         #region rUtility
+
+        private void SpawnPickups()
+        {
+            if (mTimer.GetElapsedMs() > 6000)
+            {
+                Vector2 spawnPos = new Vector2(RandomManager.Next(0, 800), mCamera.GetPos().Y - Tile.TILE_SIZE);
+                Pickup pickup = new Pickup(spawnPos);
+
+                mTimer.Reset();
+            }
+        }
 
         #endregion rUtility
     }
