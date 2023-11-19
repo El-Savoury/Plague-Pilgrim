@@ -33,7 +33,6 @@
         /// <summary>
         /// Load content for entity such as textures
         /// </summary>
-        /// <param name="content">Monogame content manager</param>
         public abstract void LoadContent();
 
         #endregion mInitialsation
@@ -68,7 +67,7 @@
         /// </summary>
         /// <param name="entity">Entity that is colliding with us</param>
         public abstract void OnCollideEntity(Entity entity);
-        
+
 
         #endregion rUpdate
 
@@ -103,7 +102,7 @@
         /// <summary>
         /// Get position of entity
         /// </summary>
-        public Vector2 GetPosition()
+        public Vector2 GetPos()
         {
             return mPosition;
         }
@@ -112,7 +111,7 @@
         /// <summary>
         /// Set position of entity
         /// </summary>
-        public void SetPosition(Vector2 pos)
+        public void SetPos(Vector2 pos)
         {
             mPosition = pos;
         }
@@ -122,12 +121,11 @@
         /// Get centre position of entity
         /// </summary>
         /// <returns></returns>
-        public Vector2 GetCentrePos()
+        public Vector2 GetCentre()
         {
             Rect2f collider = ColliderBounds();
 
             return (collider.min + collider.max) / 2.0f;
-
         }
 
 

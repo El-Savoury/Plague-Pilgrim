@@ -26,7 +26,8 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            TileManager.InitTileMap(new Vector2(0, -Tile.TILE_SIZE));
+            //TileManager.InitTileMap(new Vector2(0, -Tile.TILE_SIZE));
+            TileManager.InitTileMap(new Vector2(0, 0/*-TileManager.GetSize().Y * Tile.TILE_SIZE*/));
         }
 
 
@@ -35,19 +36,22 @@
         /// </summary>
         public override void LoadContent()
         {
+            TileManager.LoadTileMap();
+                        
+            // Player 
+            Point spawnTile = new Point(TileManager.GetSize().X / 2, /*-1*/TileManager.GetSize().Y * Tile.TILE_SIZE);
+            mPlayer = new Player(TileManager.GetTilePos(spawnTile));
+            EntityManager.RegisterEntity(mPlayer);
+
+            // Camera
+            //mCamera = new Camera(new Vector2(0, -GetScreenSize().Height));
+            mCamera = new Camera(new Vector2(0, TileManager.GetSize().Y * Tile.TILE_SIZE - GetScreenSize().Height));
+            mCamera.TargetEntity(mPlayer);
+
+            // Room timer
             mTimer = new Timer();
             TimeManager.RegisterTimer(mTimer);
             mTimer.Start();
-
-            TileManager.LoadTileMap();
-
-            // Spawn player in middle tile, bottom row 
-            Point spawnTile = new Point(TileManager.GetSize().X / 2, -1);
-            mPlayer = new Player(TileManager.GetTilePos(spawnTile));
-            mPlayer.LoadContent();
-
-            mCamera = new Camera(new Vector2(0, -GetScreenSize().Height));
-            mCamera.TargetEntity(mPlayer);
         }
 
         #endregion rInitialisation
@@ -68,9 +72,11 @@
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
             mCamera.Update(gameTime);
-            mPlayer.Update(gameTime);
-            mPlayer.ClamptoCameraView(mCamera);
 
+            EntityManager.Update(gameTime);
+            TileManager.Update(gameTime);
+
+            mPlayer.ClamptoCameraView(mCamera);
         }
 
         #endregion rUpdate
@@ -95,7 +101,7 @@
             mCamera.StartSpriteBatch(info);
 
             TileManager.Draw(info);
-            mPlayer.Draw(info);
+            EntityManager.Draw(info);
 
             mCamera.EndSpriteBatch(info);
 

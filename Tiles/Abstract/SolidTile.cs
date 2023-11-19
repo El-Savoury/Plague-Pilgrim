@@ -17,7 +17,17 @@
         /// <param name="gameTime">Frame time</param>
         public override CollisionResults Collide(MovingEntity entity, GameTime gameTime)
         {
-            return Collision2D.MovingRectVsRect(entity.ColliderBounds(), entity.VelocityToDisplacement(gameTime), GetBounds());
+            return CollisionResults.None;
+        }
+
+
+        /// <summary>
+        /// Resolve collision with an entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void OnEntityCollision(MovingEntity entity)
+        {
+            entity.UpdateCollision(GetBounds());
         }
 
 

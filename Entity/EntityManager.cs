@@ -16,12 +16,7 @@
 
         #region rMembers
 
-        static List<Entity> mRegisteredEntities = new List<Entity>();
-        static List<EntityCollision> mCollisionBuffer = new List<EntityCollision>(); // List of legitimate collisions
-        static List<ColliderSubmission> mAuxiliaryColliders = new List<ColliderSubmission>(); // List of possible collisions
-
-        static List<Entity> mQueuedRegisters = new List<Entity>();
-        static List<Entity> mQueuedDeletes = new List<Entity>();
+        private static List<Entity> mRegisteredEntities = new List<Entity>();
 
         #endregion rMembers
 
@@ -40,8 +35,6 @@
         /// <param name="gameTime">Frame Time</param>
         public static void Update(GameTime gameTime)
         {
-            mAuxiliaryColliders.Clear();
-
             foreach (Entity entity in mRegisteredEntities)
             {
                 if (entity.IsEnabled())
@@ -50,28 +43,7 @@
                 }
             }
 
-            ResolveEntityTouching();
-            FlushQueues();
-        }
-
-
-        /// <summary>
-		/// Flush add/delete queues.
-		/// </summary>
-		private static void FlushQueues()
-        {
-            foreach (Entity entity in mQueuedRegisters)
-            {
-                RegisterEntity(entity);
-            }
-
-            foreach (Entity entity in mQueuedDeletes)
-            {
-                DeleteEntity(entity);
-            }
-
-            mQueuedDeletes.Clear();
-            mQueuedRegisters.Clear();
+            ResolveEntityCollision();
         }
 
         #endregion rUpdate
@@ -110,67 +82,25 @@
         #region rCollision
 
         /// <summary>
-        /// Add collider to list of enabled objects for checking
+        /// Resolve all entity vs entity collisions
         /// </summary>
-        public static void AddColliderSubmission(ColliderSubmission submission)
-        {
-            mAuxiliaryColliders.Add(submission);
-        }
-
-
-        /// <summary>
-        /// Get the collision this entity will hit next. Returns null if no more collisions.
-        /// </summary>
-        public static EntityCollision GetNextCollision(GameTime gameTime, MovingEntity entity)
-        {
-            mCollisionBuffer.Clear();
-
-            TileManager.GatherCollisions(gameTime, entity, ref mCollisionBuffer);
-
-            // Filter out unnecessary collison checks and only store collisons that will legitimately occur
-            foreach (ColliderSubmission submission in mAuxiliaryColliders)
-            {
-                if (submission.CanCollideWith(entity))
-                {
-                    EntityCollision collision = submission.GetEntityCollision(gameTime, entity);
-
-                    if (collision != null)
-                    {
-                        mCollisionBuffer.Add(collision);
-                    }
-                }
-            }
-
-            // Sort collisons into the order they will occur based on proximity to player
-            if (mCollisionBuffer.Count > 0)
-            {
-                return Utility.GetMin(ref mCollisionBuffer, EntityCollision.COLLISION_SORTER);
-            }
-
-            return null;
-        }
-
-
-        /// <summary>
-        /// Resolve all Entity v Entity collisions
-        /// </summary>
-        public static void ResolveEntityTouching()
+        private static void ResolveEntityCollision()
         {
             for (int i = 0; i < mRegisteredEntities.Count - 1; i++)
             {
                 Entity iEntity = mRegisteredEntities[i];
                 if (!iEntity.IsEnabled()) continue;
 
-                Rect2f iRect = iEntity.ColliderBounds();
+                Rect2f iBounds = iEntity.ColliderBounds();
 
                 for (int j = i + 1; j < mRegisteredEntities.Count; j++)
                 {
                     Entity jEntity = mRegisteredEntities[j];
                     if (!jEntity.IsEnabled()) continue;
 
-                    Rect2f jRect = jEntity.ColliderBounds();
+                    Rect2f jBounds = jEntity.ColliderBounds();
 
-                    if (Collision2D.RectVsRect(iRect, jRect))
+                    if (Collision2D.RectVsRect(iBounds, jBounds))
                     {
                         // Both entities react
                         iEntity.OnCollideEntity(jEntity);
@@ -191,10 +121,10 @@
         #region rEntityRegistry
 
         /// <summary>
-		/// Register entity to this manager
-		/// </summary>
-		/// <param name="entity">Entity to be registered</param>
-		public static void RegisterEntity(Entity entity)
+        /// Register entity to this manager
+        /// </summary>
+        /// <param name="entity">Entity to be registered</param>
+        public static void RegisterEntity(Entity entity)
         {
             mRegisteredEntities.Add(entity);
             entity.LoadContent();
@@ -221,28 +151,14 @@
 
 
         /// <summary>
-        /// Call this when adding entities at runtime
+        /// Clear all entities.
         /// </summary>
-        public static void QueueRegisterEntity(Entity entity)
+        public static void ClearEntities()
         {
-            mQueuedRegisters.Add(entity);
-        }
-
-
-        /// <summary>
-        /// Call this when adding entities at runtime
-        /// </summary>
-        public static void QueueDeleteEntity(Entity entity)
-        {
-            mQueuedDeletes.Add(entity);
+            mRegisteredEntities.Clear();
         }
 
         #endregion rEntityRegistry
 
-
-
-        #region rFactory
-
-        #endregion rFactory
     }
 }

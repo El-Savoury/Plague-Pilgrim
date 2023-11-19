@@ -13,7 +13,8 @@
     /// </summary>
     struct CollisionResults
     {
-        public Vector2 collisionPoint;
+        public Vector2 EntryPoint;
+        public Vector2 ExitPoint;
         public Vector2 normal;
         public float? t; // Time to point of contact from ray's origin, null if no contact
 
@@ -23,7 +24,8 @@
             {
                 CollisionResults none;
 
-                none.collisionPoint = Vector2.Zero;
+                none.EntryPoint = Vector2.Zero;
+                none.ExitPoint = Vector2.Zero;
                 none.normal = Vector2.Zero;
                 none.t = null;
 
@@ -34,7 +36,7 @@
         {
             get
             {
-                return /*t.HasValue*/ t > 0 && t < 1;
+                return t.HasValue && t <= 1;
             }
         }
     }
@@ -156,11 +158,11 @@
         /// </summary>
         /// <param name="rect1">First rectangle</param>
         /// <param name="rect2">Second rectangle</param>
-        /// <returns>True if they overlap (inclusive)</returns>
+        /// <returns>True if they overlap (exclusive)</returns>
         public static bool RectVsRect(Rect2f rect1, Rect2f rect2)
         {
-            return rect1.min.X <= rect2.max.X && rect2.min.X <= rect1.max.X &&
-                rect1.min.Y <= rect2.max.Y && rect2.min.Y <= rect1.max.Y;
+            return rect1.min.X < rect2.max.X && rect2.min.X < rect1.max.X &&
+                rect1.min.Y < rect2.max.Y && rect2.min.Y < rect1.max.Y;
         }
 
 
@@ -169,49 +171,49 @@
         /// </summary>
         /// <param name="ray">Ray to check</param>
         /// <param name="rect">Rectangle to check</param>
-        /// <returns>Collison results of intersection</returns>
+        /// <returns>Collision results of intersection</returns>
         public static CollisionResults RayVsRect(Ray2f ray, Rect2f rect)
         {
             CollisionResults results = new CollisionResults();
 
-            // Get the intersection points wherever they land on each axis 
-            float Nx = (rect.min.X - ray.origin.X) - ray.direction.X;
-            float Ny = (rect.min.Y - ray.origin.Y) - ray.direction.Y;
+            //if (PointVsRect(new Point((int)ray.origin.X, (int)ray.origin.Y), rect)) { return CollisionResults.None; }
 
-            float Fx = (rect.max.X - ray.origin.X) - ray.direction.X;
-            float Fy = (rect.max.Y - ray.origin.Y) - ray.direction.Y;
-
-            Vector2 tNear = new Vector2(Nx, Ny);
-            Vector2 tFar = new Vector2(Fx, Fy);
-
-            // Swap if far intersection point is closer than near point i.e the ray is going upwards 
-            if (tNear.X > tFar.X) { Utility.Swap(ref tNear.X, ref tFar.X); }
-            if (tNear.Y > tFar.Y) { Utility.Swap(ref tNear.Y, ref tFar.Y); }
-
-            // Return false if no collision with rectangle edges
-            if (tNear.X > tFar.Y || tNear.Y > tFar.X) return CollisionResults.None;
-
-            // If there is a collision, calculate the near and far times to the actual intersections with the rectangle
-            float tHitNear = Math.Max(tNear.X, tNear.Y);
-            float tHitFar = Math.Min(tFar.X, tFar.Y);
-
-            // Ignore collisions that happen in the negative direction i.e behind the rays origin
-            if (tHitFar < 0.0f) return CollisionResults.None;
-
-            // Assign the results of the collision
-            results.collisionPoint = ray.origin + tHitNear * ray.direction;
-            results.t = tHitNear;
-
-            // Construct normal vector
-            if (tNear.X > tNear.Y) // Hit from x axis first
+            if (ray.direction.Length() > 0)
             {
-                if (ray.direction.X < 0) { results.normal = new Vector2(1, 0); }
-                else { results.normal = new Vector2(-1, 0); }
-            }
-            else if (tNear.X > tNear.Y) // Hit from y axis first
-            {
-                if (ray.direction.Y < 0) { results.normal = new Vector2(0, 1); }
-                else { results.normal = new Vector2(0, -1); }
+                // Get the intersection points wherever they land on each axis 
+                Vector2 tNear = (rect.min - ray.origin) / ray.direction;
+                Vector2 tFar = (rect.max - ray.origin) / ray.direction;
+
+                // Swap if far intersection point is closer than near point i.e the ray is going upwards 
+                if (tNear.X > tFar.X) { Utility.Swap(ref tNear.X, ref tFar.X); }
+                if (tNear.Y > tFar.Y) { Utility.Swap(ref tNear.Y, ref tFar.Y); }
+
+                // Return none if no collision with rectangle edges
+                if (tNear.X > tFar.Y || tNear.Y > tFar.X) return CollisionResults.None;
+
+                // If there is a collision, calculate the near and far times to the actual intersections with the rectangle
+                float tHitNear = Math.Max(tNear.X, tNear.Y);
+                float tHitFar = Math.Min(tFar.X, tFar.Y);
+
+                // Ignore collisions that happen in the negative direction i.e behind the rays origin
+                if (tHitFar <= 0.0f) return CollisionResults.None;
+
+                // Assign the results of the collision
+                results.EntryPoint = ray.origin + tHitNear * ray.direction;
+                results.ExitPoint = ray.origin + tHitFar * ray.direction;
+                results.t = tHitNear;
+
+                // Construct collision normal
+                if (tNear.X > tNear.Y)
+                {
+                    if (ray.direction.X < 0) { results.normal = new Vector2(1, 0); }
+                    else { results.normal = new Vector2(-1, 0); }
+                }
+                else if (tNear.X < tNear.Y)
+                {
+                    if (ray.direction.Y < 0) { results.normal = new Vector2(0, 1); }
+                    else { results.normal = new Vector2(0, -1); }
+                }
             }
 
             return results;
@@ -219,23 +221,21 @@
 
 
         /// <summary>
-		/// Compare if moving a rectangle will hit another rectangle
-		/// </summary>
-		/// <param name="movingRect">Rectangle that will be moving</param>
-		/// <param name="displacement">How far it is moving</param>
-		/// <param name="targetRect">Rectangle that is static</param>
-		/// <returns>Collision results of collision</returns>
+        /// Compare if moving a rectangle will hit another rectangle
+        /// </summary>s
+        /// <param name="movingRect">Rectangle that will be moving</param>
+        /// <param name="displacement">How far it is moving</param>
+        /// <param name="targetRect">Rectangle that is static</param>
+        /// <returns>Collision results of collision</returns>
         public static CollisionResults MovingRectVsRect(Rect2f movingRect, Vector2 displacement, Rect2f targetRect)
         {
-            if (displacement == Vector2.Zero) { return CollisionResults.None; }
-
-            //Expand target rectangle
+            //Expand target rect
             Vector2 sizeVec = new Vector2(movingRect.Width * 0.5f, movingRect.Height * 0.5f);
 
             targetRect.min -= sizeVec;
             targetRect.max += sizeVec;
 
-            return RayVsRect(new Ray2f(movingRect.Centre, displacement), targetRect);
+            return RayVsRect(new Ray2f(new Vector2(movingRect.Centre.X, movingRect.Centre.Y), displacement), targetRect);
         }
     }
 }

@@ -87,42 +87,6 @@
 
 
 
-        #region rUtility
-
-        /// <summary>
-        /// Get the tile map coordiante of this tile
-        /// </summary>
-        /// <returns>Tile map coords/returns>
-        public virtual Point GetMapIndex()
-        {
-            return mTileMapIndex;
-        }
-
-
-        /// <summary>
-        /// Is this tile enabled?
-        /// </summary>
-        public virtual bool GetEnabled()
-        {
-            return mEnabled;
-        }
-
-
-        /// <summary>
-        /// Get tile width and height
-        /// </summary>
-        /// <returns>Tile size in pixels</returns>
-        public virtual int GetSize()
-        {
-            return TILE_SIZE;
-        }
-
-        #endregion rUtility
-
-
-
-
-
 
         #region rCollision
 
@@ -138,7 +102,7 @@
         /// Called when an entity touches tile
         /// </summary>
         /// <param name="entity">Entity that is touching</param>
-        public virtual void OnTouch(MovingEntity entity, CollisionResults collisionResults) { }
+        public virtual void OnEntityCollision(MovingEntity entity) { }
 
 
         /// <summary>
@@ -166,7 +130,53 @@
         {
             return new Rect2f(mPosition, mPosition + new Vector2(TILE_SIZE, TILE_SIZE));
         }
+        
+        #endregion rCollision
 
+
+
+
+
+
+
+        #region rUtility
+
+        /// <summary>
+        /// Get the tile map coordiante of this tile
+        /// </summary>
+        /// <returns>Tile map coords/returns>
+        public virtual Point GetMapIndex()
+        {
+            return mTileMapIndex;
+        }
+
+
+        /// <summary>
+        /// Is this tile enabled?
+        /// </summary>
+        public virtual bool IsEnabled()
+        {
+            return mEnabled;
+        }
+
+
+        /// <summary>
+        /// Get the center of the tile
+        /// </summary>
+        public virtual Vector2 GetCentre()
+        {
+            return mPosition + new Vector2(TILE_SIZE, TILE_SIZE) * 0.5f;
+        }
+
+
+        /// <summary>
+        /// Get tile width and height
+        /// </summary>
+        /// <returns>Tile size in pixels</returns>
+        public virtual int GetSize()
+        {
+            return TILE_SIZE;
+        }
 
 
         /// <summary>
@@ -178,6 +188,8 @@
             return false;
         }
 
-        #endregion rCollision
+        #endregion rUtility
+
+
     }
 }

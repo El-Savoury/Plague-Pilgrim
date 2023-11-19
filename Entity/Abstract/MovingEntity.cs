@@ -20,8 +20,7 @@
         #region rMembers
 
         protected Vector2 mVelocity;
-        protected Vector2 mPrevVelocity;
-
+        
         #endregion rMembers
 
 
@@ -55,60 +54,39 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mPrevVelocity = mVelocity;
-            UpdateCollision(gameTime);
-            
+            ApplyVelocity(gameTime);
+
+            TileManager.ResolveEntityTileCollision(gameTime, this);
+
             base.Update(gameTime);
         }
-
 
 
         /// <summary>
         /// Handle all collisions
         /// </summary>
-        /// <param name="gameTime">Frame time</param>
-        private void UpdateCollision(GameTime gameTime)
+        /// <param name="rect">Bounds of object to collide with</param>
+        public void UpdateCollision(Rect2f rect)
         {
-            // List of all genuine collisions. A collision can be detected but never actually happen
-            // E.g. We are going to collide with a wall but a block is in the way
-            List<EntityCollision> collisionList = new List<EntityCollision>();
-
-            // Get first collision in list
-            EntityCollision currentCollision = EntityManager.GetNextCollision(gameTime, this);
-
-            while (currentCollision != null)
+            if (Collision2D.RectVsRect(ColliderBounds(), rect))
             {
-                EntityCollision entityCollision = currentCollision;
-                CollisionResults collisionResults = entityCollision.GetResults();
+                // Calculate overlap by gettng distance between intersected edges
+                float overlapX = Math.Min(ColliderBounds().max.X, rect.max.X) - Math.Max(ColliderBounds().min.X, rect.min.X);
+                float overlapY = Math.Min(ColliderBounds().max.Y, rect.max.Y) - Math.Max(ColliderBounds().min.Y, rect.min.Y);
 
-                // Get the amount we have intersected the other entity by
-                Vector2 intersect = new Vector2(Math.Abs(mVelocity.X), Math.Abs(mVelocity.Y) * (1.0f - collisionResults.t.Value));
-
-                // Move position back outside of entity we have collided with 
-                Vector2 pushVec = collisionResults.normal * intersect;
-                mVelocity += pushVec;
-
-                // Check for bugged collisions
-                if (collisionList.Count > COLLISION_MAX_COUNT)
+                // Resolve collision along axis with smallest overap
+                if (overlapX < overlapY)
                 {
-                    // Fail-safe, don't move
-                    mVelocity = Vector2.Zero;
-
-                    // Clear list of stuck collision
-                    collisionList.Clear();
-                    break;
+                    // Resolve X axis
+                    if (ColliderBounds().Centre.X < rect.Centre.X) { mPosition.X -= overlapX; }
+                    else { mPosition.X += overlapX; }
                 }
-
-                // Get the next collision happening to this entity from the list
-                currentCollision = EntityManager.GetNextCollision(gameTime, this);
-            }
-
-            ApplyVelocity(gameTime);
-
-            // React to each collision
-            foreach (EntityCollision entityCollision in collisionList)
-            {
-                entityCollision.PostCollisionReact(this);
+                else
+                {
+                    // Resovle Y axis
+                    if (ColliderBounds().Centre.Y < rect.Centre.Y) { mPosition.Y -= overlapY; }
+                    else { mPosition.Y += overlapY; }
+                }
             }
         }
 
@@ -174,9 +152,9 @@
         /// <returns>Normalised direciton vector</returns>s
         public Vector2 GetDirection()
         {
-            Vector2 nextPos = GetCentrePos() + mVelocity;
+            Vector2 nextPos = GetCentre() + mVelocity;
 
-            return Vector2.Normalize(nextPos - GetCentrePos());
+            return Vector2.Normalize(nextPos - GetCentre());
         }
 
         #endregion rUtility

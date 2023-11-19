@@ -15,6 +15,16 @@
 
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void OnEntityIntersect(Entity entity)
+        {
+          
+        }
+
+
+        /// <summary>
         /// Get normal bounds
         /// </summary>
         /// <returns>Square bounds</returns>

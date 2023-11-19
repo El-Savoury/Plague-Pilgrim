@@ -7,7 +7,7 @@
     {
         public Point mTileMapSize;
         // Difficulty
-        // Texture pack
+        // Theme 
     }
 
     /// <summary>
@@ -17,7 +17,7 @@
     {
         #region rConstants
 
-        static Point MAP_SIZE = new Point(20, 400);
+        static Point MAP_SIZE = new Point(20, 100);
         static int GROUND_MAX_WIDTH = 10;
         static int GROUND_MIN_WIDTH = 5;
         static int MIN_SECTION_WIDTH = 2;
@@ -52,67 +52,74 @@
         /// Inititialse size and world position of tile map
         /// </summary>
         /// <param name="pos">Top left corner of tile map</param>
-        /// <param name="mapSize">Width and height of tile map in tiles</param>
         public static void InitTileMap(Vector2 pos)
         {
             mTileMapPos = pos;
             mTileMap = new Tile[MAP_SIZE.X, MAP_SIZE.Y];
             mDefaultTile = new EmptyTile(Vector2.Zero);
-            mTileSize = mDefaultTile.GetSize();
+            mTileSize = Tile.TILE_SIZE;
         }
 
 
         public static void LoadTileMap()
         {
-            int[] bankLeft = GetBankWidths();
-            int[] bankRight = GetBankWidths();
+            //int[] bankLeft = GetBankWidths();
+            //int[] bankRight = GetBankWidths();
 
             for (int y = 0; y < mTileMap.GetLength(1); y++)
             {
                 for (int x = 0; x < mTileMap.GetLength(0); x++)
                 {
-                    Vector2 tilePos = new Vector2(mTileMapPos.X + x * mTileSize, mTileMapPos.Y - y * mTileSize);
+                    Vector2 tilePos = new Vector2(mTileMapPos.X + x * mTileSize, mTileMapPos.Y + y * mTileSize);
 
-                    mTileMap[x, y] = new EmptyTile(tilePos);
+                    if (x == RandomManager.Next(0, mTileMap.GetLength(0)))
+                    {
+                        mTileMap[x, y] = new RockTile(tilePos);
+                    }
+                    else
+                    {
+                        mTileMap[x, y] = new EmptyTile(tilePos);
+                    }
+
                     mTileMap[x, y].LoadContent();
                 }
             }
         }
 
 
-        private static int[] GetBankWidths()
-        {
-            int[] widths = new int[mTileMap.GetLength(1)];
+        //private static int[] GetBankWidths()
+        //{
+        //    int[] widths = new int[mTileMap.GetLength(1)];
 
-            // Set starting width
-            int lastWidth = RandomManager.Next(GROUND_MIN_WIDTH, GROUND_MAX_WIDTH + 1);
+        //    // Set starting width
+        //    int lastWidth = RandomManager.Next(GROUND_MIN_WIDTH, GROUND_MAX_WIDTH + 1);
 
-            int nextMove = 0; // Used to determine which direction to go
-            int sectionWidth = 0; // Used to keep track of the current sections width
+        //    int nextMove = 0; // Used to determine which direction to go
+        //    int sectionWidth = 0; // Used to keep track of the current sections width
 
-            // Cycle through our widths
-            for (int i = 0; i < widths.Length; i++)
-            {
-                // Flip coin to determine next move up or down
-                nextMove = RandomManager.FlipCoin();
+        //    // Cycle through our widths
+        //    for (int i = 0; i < widths.Length; i++)
+        //    {
+        //        // Flip coin to determine next move up or down
+        //        nextMove = RandomManager.FlipCoin();
 
-                //Only change the height if current height used more than the minimum required section width
-                if (nextMove == 0 && lastWidth > GROUND_MIN_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
-                {
-                    lastWidth--;
-                    sectionWidth = 0;
-                }
-                else if (nextMove == 1 && lastWidth < GROUND_MAX_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
-                {
-                    lastWidth++;
-                    sectionWidth = 0;
-                }
+        //        //Only change the height if current height used more than the minimum required section width
+        //        if (nextMove == 0 && lastWidth > GROUND_MIN_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
+        //        {
+        //            lastWidth--;
+        //            sectionWidth = 0;
+        //        }
+        //        else if (nextMove == 1 && lastWidth < GROUND_MAX_WIDTH && sectionWidth > MIN_SECTION_WIDTH)
+        //        {
+        //            lastWidth++;
+        //            sectionWidth = 0;
+        //        }
 
-                sectionWidth++;
-                widths[i] = lastWidth;
-            }
-            return widths;
-        }
+        //        sectionWidth++;
+        //        widths[i] = lastWidth;
+        //    }
+        //    return widths;
+        //}
 
         #endregion rInitialisation
 
@@ -127,6 +134,13 @@
 
         public static void Update(GameTime gameTime)
         {
+            for (int x = 0; x < mTileMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < mTileMap.GetLength(1); y++)
+                {
+                    mTileMap[x, y].Update(gameTime);
+                }
+            }
         }
 
         #endregion rUdate
@@ -186,32 +200,42 @@
         #region rCollisions
 
         /// <summary>
-        /// Resolve all collisions with an entity
+        /// Check if an entity has collided with any tiles. Call tile response if they have.
         /// </summary>
-        /// <param name="gameTime">Entity to collide</param>
-        /// <param name="entity">Frame time</param>
-        /// <param name="outputList">List of all collisions</param>
-        public static void GatherCollisions(GameTime gameTime, MovingEntity entity, ref List<EntityCollision> outputList)
+        public static void ResolveEntityTileCollision(GameTime gameTime, MovingEntity entity)
         {
-            // Get players position in next frame
-            Rect2f playerBounds = entity.ColliderBounds();
-            Rect2f futurePlayerBounds = entity.ColliderBounds() + entity.VelocityToDisplacement(gameTime);
+            Rect2f bounds = entity.ColliderBounds();
+            Rect2f futureBounds = bounds + entity.VelocityToDisplacement(gameTime);
 
-            // Define rectangle encompassing all tiles between the players current position and future position in next frame
-            Rectangle tileBounds = PossibleIntersectTiles(playerBounds + futurePlayerBounds);
+            // Gather possible collision tiles.
+            Rectangle tileBounds = PossibleIntersectTiles(bounds + futureBounds);
+            List<Tile> possibleCollisions = new List<Tile>();
 
-            // Check all tiles within rectangle for collisions
             for (int x = tileBounds.X; x <= tileBounds.X + tileBounds.Width; x++)
             {
                 for (int y = tileBounds.Y; y <= tileBounds.Y + tileBounds.Height; y++)
                 {
-                    if (mTileMap[x, y].GetEnabled() == false) { continue; }
-
-                    CollisionResults collisionResults = mTileMap[x, y].Collide(entity, gameTime);
-
-                    if (collisionResults.Collided)
+                    if (mTileMap[x, y].IsEnabled() & Collision2D.RectVsRect(mTileMap[x, y].GetBounds(), entity.ColliderBounds()))
                     {
-                        outputList.Add(new TileEntityCollision(collisionResults, new Point(x, y)));
+                        possibleCollisions.Add(mTileMap[x, y]);
+                    }
+                }
+            }
+
+            // Sort order of collisions based on proximity to player.
+            if (possibleCollisions.Count > 0)
+            {
+                List<Tile> sortedList = SortCollisions(entity, possibleCollisions);
+
+                foreach (Tile tile in sortedList)
+                {
+                    if (tile.IsSolid())
+                    {
+                        tile.OnEntityCollision(entity);
+                    }
+                    else
+                    {
+                        tile.OnEntityIntersect(entity);
                     }
                 }
             }
@@ -234,6 +258,36 @@
 
             // Return a rectangle with size in number of tiles. (rectMin - rectMax gets the number of tiles between the two points rather than all tiles frome top left of tile map)
             return new Rectangle(rectMin, rectMax - rectMin);
+        }
+
+
+
+        /// <summary>
+        /// Sorts possible tile collisions based on their proximity to the player.
+        /// </summary>
+        /// <param name="entity">Entity to check for collisions</param>
+        /// <param name="tiles">Tiles near enough to be collided with</param>
+        /// <returns>List of collisions from closest to furthest from entity</returns>
+        private static List<Tile> SortCollisions(MovingEntity entity, List<Tile> tiles)
+        {
+            List<Tile> returnList = new List<Tile> { tiles[0] };
+
+            for (int i = 1; i < tiles.Count(); i++)
+            {
+                float iDist = (tiles[i].GetCentre() - entity.GetCentre()).Length();
+                float jDist = (returnList[i - 1].GetCentre() - entity.GetCentre()).Length();
+
+                if (iDist <= jDist)
+                {
+                    returnList.Insert(i - 1, tiles[i]);
+                }
+                else
+                {
+                    returnList.Add(tiles[i]);
+                }
+            }
+
+            return returnList;
         }
 
         #endregion rCollisionss

@@ -1,13 +1,9 @@
 ﻿namespace Plague_Pilgrim
 {
-    /// <summary>
-    /// Playable entity
-    /// </summary>
-    class Player : MovingEntity
+    internal class Pickup : MovingEntity
     {
-        #region rConstants
 
-        const float SPEED = 15.0f;
+        #region rConstants
 
         #endregion rConstants
 
@@ -19,7 +15,7 @@
 
         #region rMembers
 
-        Color mColour = Color.White;
+        Color mColour = Color.Blue;
 
         #endregion rMembers
 
@@ -35,7 +31,7 @@
         /// Construct player at position.
         /// </summary>
         /// <param name="pos">Starting position</param>
-        public Player(Vector2 pos) : base(pos)
+        public Pickup(Vector2 pos) : base(pos)
         {
 
         }
@@ -68,37 +64,12 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mVelocity = new Vector2(0, -3);
-
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= SPEED; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += SPEED; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= SPEED; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += SPEED; }
+            mPosition.Y += 3.0f;
 
             base.Update(gameTime);
         }
 
 
-        ///// <summary>
-        ///// Calculate player movement based on directional input 
-        ///// </summary>
-        ///// <returns>Vector representing distance and direction to move</returns>
-        //private Vector2 CalcDirection()
-        //{
-        //    Vector2 inputDir = Vector2.Zero;
-
-        //    if (InputManager.KeyHeld(Controls.Left)) { inputDir.X -= 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Right)) { inputDir.X += 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Up)) { inputDir.Y -= 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Down)) { inputDir.Y += 1; }
-
-        //    if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
-
-        //    return inputDir;
-        //}
 
         #endregion rUpdate
 
@@ -127,7 +98,6 @@
 
 
 
-
         #region rCollision
 
         /// <summary>
@@ -136,7 +106,7 @@
         /// <param name="entity">Entity that is colliding with player</param>
         public override void OnCollideEntity(Entity entity)
         {
-            mColour = Color.Red;
+            mColour = Color.Green;
         }
 
         /// <summary>
@@ -152,22 +122,8 @@
 
 
 
-
-
-
-
         #region mUtility
 
-        public void ClamptoCameraView(Camera cam)
-        {
-            Rect2f view = new Rect2f(cam.GetPos(), 800, 800);
-
-            mPosition.X = Math.Clamp(mPosition.X, view.min.X, view.max.X - mTexture.Width);
-            mPosition.Y = Math.Clamp(mPosition.Y, view.min.Y, view.max.Y - mTexture.Height);
-        }
-
         #endregion mUtility
-
-
     }
 }

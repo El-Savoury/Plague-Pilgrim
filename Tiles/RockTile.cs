@@ -29,6 +29,17 @@
 
         #region rUpdate
 
+
+        /// <summary>
+        /// Resolve collision with an entity.
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void OnEntityCollision(MovingEntity entity)
+        {
+            entity.UpdateCollision(GetBounds());
+            
+        }
+
         /// <summary>
         /// Update tile
         /// </summary>
