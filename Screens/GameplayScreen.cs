@@ -26,8 +26,7 @@
         /// <param name="graphics">Graphics device</param>
         public GameplayScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
-            //TileManager.InitTileMap(new Vector2(0, -Tile.TILE_SIZE));
-            TileManager.InitTileMap(new Vector2(0, 0/*-TileManager.GetSize().Y * Tile.TILE_SIZE*/));
+            TileManager.InitTileMap(Vector2.Zero);
         }
 
 
@@ -37,15 +36,14 @@
         public override void LoadContent()
         {
             TileManager.LoadTileMap();
-                        
+
             // Player 
-            Point spawnTile = new Point(TileManager.GetSize().X / 2, /*-1*/TileManager.GetSize().Y * Tile.TILE_SIZE);
+            Point spawnTile = new Point(TileManager.GetSize().X / 2, TileManager.GetSize().Y - 2);
             mPlayer = new Player(TileManager.GetTilePos(spawnTile));
             EntityManager.RegisterEntity(mPlayer);
 
             // Camera
-            //mCamera = new Camera(new Vector2(0, -GetScreenSize().Height));
-            mCamera = new Camera(new Vector2(0, TileManager.GetSize().Y * Tile.TILE_SIZE - GetScreenSize().Height));
+            mCamera = new Camera(new Vector2(0, TileManager.GetHeight() - GetScreenSize().Height));
             mCamera.TargetEntity(mPlayer);
 
             // Room timer
@@ -72,7 +70,6 @@
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
             mCamera.Update(gameTime);
-
             EntityManager.Update(gameTime);
             TileManager.Update(gameTime);
 

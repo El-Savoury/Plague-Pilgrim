@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        public static int TILE_SIZE = 24;
+        public static int TILE_SIZE = 32;
 
         #endregion rConstants
 
@@ -109,7 +109,7 @@
         /// Called when an entity intersects tile
         /// </summary>
         /// <param name="entity">Entity that is intersecting</param>
-        public virtual void OnEntityIntersect(Entity entity) { }
+        public virtual void OnEntityIntersect(MovingEntity entity) { }
 
 
         /// <summary>

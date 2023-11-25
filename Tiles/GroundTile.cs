@@ -5,13 +5,10 @@
     /// </summary>
     internal class GroundTile : SolidTile
     {
-
-        #region rInitialisation
-
         /// <summary>
         /// Constructor
         /// </summary>
-        public GroundTile(Vector2 pos) :base(pos)
+        public GroundTile(Vector2 pos) : base(pos)
         {
         }
 
@@ -19,25 +16,5 @@
         {
             mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/ground");
         }
-
-        #endregion rInitialisation
-
-
-
-
-
-
-        #region rUpdate
-
-        /// <summary>
-        /// Update tile
-        /// </summary>
-        /// <param name="gameTime">Frame time</param>
-        public override void Update(GameTime gameTime)
-        {
-        }
-
-        #endregion rUpdate
-
     }
 }

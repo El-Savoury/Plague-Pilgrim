@@ -1,9 +1,11 @@
-﻿namespace Plague_Pilgrim
+﻿using Microsoft.VisualBasic.FileIO;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Playable entity
     /// </summary>
-    class Player : MovingEntity
+    internal class Player : MovingEntity
     {
         #region rConstants
 
@@ -78,6 +80,17 @@
             base.Update(gameTime);
         }
 
+
+        /// <summary>
+        /// Decrease players velocity
+        /// </summary>
+        public override void DecreaseVelocity()
+        {
+            if (mVelocity.X > 0) { mVelocity.X = 1; }
+            else if (mVelocity.X < 0) { mVelocity.X = -1; }
+            if (mVelocity.Y > 0) { mVelocity.Y = 1; }
+            else if (mVelocity.Y < 0) { mVelocity.Y = 0 - 1; }
+        }
 
         ///// <summary>
         ///// Calculate player movement based on directional input 

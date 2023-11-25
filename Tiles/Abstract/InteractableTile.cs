@@ -18,9 +18,8 @@
         /// 
         /// </summary>
         /// <param name="entity"></param>
-        public override void OnEntityIntersect(Entity entity)
+        public override void OnEntityIntersect(MovingEntity entity)
         {
-          
         }
 
 

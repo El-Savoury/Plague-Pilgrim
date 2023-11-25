@@ -1,4 +1,6 @@
-﻿namespace Plague_Pilgrim
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
 	/// Entity that can move and collide
@@ -20,7 +22,7 @@
         #region rMembers
 
         protected Vector2 mVelocity;
-        
+
         #endregion rMembers
 
 
@@ -54,11 +56,11 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            ApplyVelocity(gameTime);
 
             TileManager.ResolveEntityTileCollision(gameTime, this);
+            ApplyVelocity(gameTime);
 
-            base.Update(gameTime);
+
         }
 
 
@@ -98,6 +100,14 @@
         protected void ApplyVelocity(GameTime gameTime)
         {
             mPosition += VelocityToDisplacement(gameTime);
+        }
+
+
+        /// <summary>
+        /// Lower the velocity of moving entity
+        /// </summary>
+        public virtual void DecreaseVelocity()
+        {
         }
 
 

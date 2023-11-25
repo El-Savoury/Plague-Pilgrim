@@ -3,7 +3,7 @@
     /// <summary>
     /// Tile representing a rock
     /// </summary>
-    internal class RockTile : SolidTile
+    internal class RockTile : InteractableTile
     {
 
         #region rInitialisation
@@ -31,23 +31,17 @@
 
 
         /// <summary>
-        /// Resolve collision with an entity.
+        /// 
         /// </summary>
         /// <param name="entity"></param>
-        public override void OnEntityCollision(MovingEntity entity)
+        public override void OnEntityIntersect(MovingEntity entity)
         {
-            entity.UpdateCollision(GetBounds());
-            
-        }
+            // TODO: Stop ship and make it flash
 
-        /// <summary>
-        /// Update tile
-        /// </summary>
-        /// <param name="gameTime">Frame time</param>
-        public override void Update(GameTime gameTime)
-        {
+            mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/rapids");
         }
 
         #endregion rUpdate
+
     }
 }

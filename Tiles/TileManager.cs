@@ -57,7 +57,7 @@
             mTileMapPos = pos;
             mTileMap = new Tile[MAP_SIZE.X, MAP_SIZE.Y];
             mDefaultTile = new EmptyTile(Vector2.Zero);
-            mTileSize = Tile.TILE_SIZE;
+            mTileSize = mDefaultTile.GetSize();
         }
 
 
@@ -74,7 +74,7 @@
 
                     if (x == RandomManager.Next(0, mTileMap.GetLength(0)))
                     {
-                        mTileMap[x, y] = new RockTile(tilePos);
+                        mTileMap[x, y] = new SlowTile(tilePos);
                     }
                     else
                     {
@@ -306,6 +306,24 @@
         public static Point GetSize()
         {
             return MAP_SIZE;
+        }
+
+
+        /// <summary>
+        /// Return tile map width in pixels
+        /// </summary>
+        public static int GetWidth()
+        {
+            return mTileMap.GetLength(0) * mTileSize;
+        }
+
+
+        /// <summary>
+        /// Return tile map height in pixels
+        /// </summary>
+        public static int GetHeight()
+        {
+            return mTileMap.GetLength(1) * mTileSize;
         }
 
 

@@ -47,10 +47,7 @@
         /// Update entity
         /// </summary>
         /// <param name="gameTime">Frame time</param>
-        public virtual void Update(GameTime gameTime)
-        {
-
-        }
+        public abstract void Update(GameTime gameTime);
 
 
         /// <summary>
@@ -58,7 +55,6 @@
         /// </summary>
         protected virtual void OnPlayerInteract()
         {
-
         }
 
 

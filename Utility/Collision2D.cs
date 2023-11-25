@@ -222,7 +222,7 @@
 
         /// <summary>
         /// Compare if moving a rectangle will hit another rectangle
-        /// </summary>s
+        /// </summary>
         /// <param name="movingRect">Rectangle that will be moving</param>
         /// <param name="displacement">How far it is moving</param>
         /// <param name="targetRect">Rectangle that is static</param>

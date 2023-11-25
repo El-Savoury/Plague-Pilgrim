@@ -31,6 +31,8 @@ namespace Plague_Pilgrim
     {
         #region rConstants
 
+        private const int END_POINT = 0;
+
         #endregion rConstants
 
 
@@ -77,7 +79,13 @@ namespace Plague_Pilgrim
             {
                 mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
             }
+
+            if (mPosition.Y < END_POINT)
+            {
+                mPosition.Y = END_POINT;
+            }
         }
+
         #endregion rUpdate
 
 
