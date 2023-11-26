@@ -9,7 +9,7 @@ namespace Plague_Pilgrim
     {
         #region rConstants
 
-        const float SPEED = 15.0f;
+        const float SPEED = 10.0f;
 
         #endregion rConstants
 
@@ -63,21 +63,44 @@ namespace Plague_Pilgrim
 
         #region rUpdate
 
-
         /// <summary>
         /// Update player
         /// </summary>
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mVelocity = new Vector2(0, -3);
+            mVelocity = new Vector2(0, -SPEED / 2);
 
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= SPEED; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += SPEED; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= SPEED; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += SPEED; }
+            if (GetInputDirection() != Vector2.Zero)
+            {
+                mVelocity = GetInputDirection() * SPEED;
+            }
+
+            //if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -SPEED * 2; }
+            //if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = SPEED * 2; }
+            //if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -SPEED * 2; }
+            //if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = SPEED * 2; }
 
             base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// Calculate player movement based on directional input 
+        /// </summary>
+        /// <returns>Vector representing distance and direction to move</returns>
+        private Vector2 GetInputDirection()
+        {
+            Vector2 direction = Vector2.Zero;
+
+            if (InputManager.KeyHeld(Controls.Left)) { direction.X--; }
+            if (InputManager.KeyHeld(Controls.Right)) { direction.X++; }
+            if (InputManager.KeyHeld(Controls.Up)) { direction.Y--; }
+            if (InputManager.KeyHeld(Controls.Down)) { direction.Y++; }
+
+            // TODO: FIND OUT WHY THIS CAUSES COLLISON BUG
+            if (direction != Vector2.Zero) { direction.Normalize(); }
+
+            return direction;
         }
 
 
@@ -86,32 +109,9 @@ namespace Plague_Pilgrim
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X > 0) { mVelocity.X = 1; }
-            else if (mVelocity.X < 0) { mVelocity.X = -1; }
-            if (mVelocity.Y > 0) { mVelocity.Y = 1; }
-            else if (mVelocity.Y < 0) { mVelocity.Y = 0 - 1; }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * SPEED * 0.8f; }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * SPEED * 0.8f; }
         }
-
-        ///// <summary>
-        ///// Calculate player movement based on directional input 
-        ///// </summary>
-        ///// <returns>Vector representing distance and direction to move</returns>
-        //private Vector2 CalcDirection()
-        //{
-        //    Vector2 inputDir = Vector2.Zero;
-
-        //    if (InputManager.KeyHeld(Controls.Left)) { inputDir.X -= 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Right)) { inputDir.X += 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Up)) { inputDir.Y -= 1; }
-
-        //    if (InputManager.KeyHeld(Controls.Down)) { inputDir.Y += 1; }
-
-        //    if (inputDir != Vector2.Zero) { inputDir.Normalize(); }
-
-        //    return inputDir;
-        //}
 
         #endregion rUpdate
 

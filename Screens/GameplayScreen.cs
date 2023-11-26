@@ -69,7 +69,7 @@
         {
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
-            mCamera.Update(gameTime);
+           // mCamera.Update(gameTime);
             EntityManager.Update(gameTime);
             TileManager.Update(gameTime);
 
