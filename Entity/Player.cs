@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Playable entity
@@ -69,17 +67,17 @@ namespace Plague_Pilgrim
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mVelocity = new Vector2(0, -SPEED / 2);
+            mVelocity = new Vector2(0, -SPEED);
 
-            if (GetInputDirection() != Vector2.Zero)
-            {
-                mVelocity = GetInputDirection() * SPEED;
-            }
+            // if (GetInputDirection() != Vector2.Zero)
+            // {
+            //     mVelocity = GetInputDirection() * SPEED;
+            // }
 
-            //if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -SPEED * 2; }
-            //if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = SPEED * 2; }
-            //if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -SPEED * 2; }
-            //if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = SPEED * 2; }
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -SPEED * 2; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = SPEED * 2; }
+            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -SPEED * 2; }
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = SPEED * 2; }
 
             base.Update(gameTime);
         }
@@ -109,8 +107,8 @@ namespace Plague_Pilgrim
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * SPEED * 0.8f; }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * SPEED * 0.8f; }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.1f); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.1f); }
         }
 
         #endregion rUpdate

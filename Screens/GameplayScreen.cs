@@ -69,10 +69,11 @@
         {
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
-           // mCamera.Update(gameTime);
+            mCamera.Update(gameTime);
             EntityManager.Update(gameTime);
             TileManager.Update(gameTime);
 
+            SpawnPickups();
             mPlayer.ClamptoCameraView(mCamera);
         }
 
@@ -100,6 +101,8 @@
             TileManager.Draw(info);
             EntityManager.Draw(info);
 
+            Inventory.Draw(info, (int)mCamera.GetPos().X, (int)mCamera.GetPos().Y);
+
             mCamera.EndSpriteBatch(info);
 
             return mScreenTarget;
@@ -121,6 +124,7 @@
             {
                 Vector2 spawnPos = new Vector2(RandomManager.Next(0, 800), mCamera.GetPos().Y - Tile.TILE_SIZE);
                 Pickup pickup = new Pickup(spawnPos);
+                EntityManager.RegisterEntity(pickup);
 
                 mTimer.Reset();
             }

@@ -2,8 +2,9 @@
 {
     internal class Pickup : MovingEntity
     {
-
         #region rConstants
+        
+        const float SPEED = 10.0f;
 
         #endregion rConstants
 
@@ -12,10 +13,9 @@
 
 
 
-
         #region rMembers
 
-        Color mColour = Color.Blue;
+        private int mFood;
 
         #endregion rMembers
 
@@ -33,7 +33,7 @@
         /// <param name="pos">Starting position</param>
         public Pickup(Vector2 pos) : base(pos)
         {
-
+            mFood = RandomManager.Next(1,6);
         }
 
 
@@ -57,15 +57,14 @@
 
         #region rUpdate
 
-
         /// <summary>
         /// Update player
         /// </summary>
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mPosition.Y += 3.0f;
-
+            mVelocity = new Vector2(0, SPEED);
+            
             base.Update(gameTime);
         }
 
@@ -106,7 +105,8 @@
         /// <param name="entity">Entity that is colliding with player</param>
         public override void OnCollideEntity(Entity entity)
         {
-            mColour = Color.Green;
+            Inventory.Add(mFood);
+            EntityManager.DeleteEntity(this);
         }
 
         /// <summary>
@@ -115,15 +115,26 @@
         /// <param name="collisionNormal"></param>
         public override void ReactToCollision(Vector2 collisionNormal)
         {
+        }
 
+          /// <summary>
+        /// Decrease players velocity
+        /// </summary>
+        public override void DecreaseVelocity()
+        {
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.2f); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.2f); }
         }
 
         #endregion rCollision
 
 
 
-        #region mUtility
 
-        #endregion mUtility
+
+
+        #region rUtility
+
+        #endregion rUtility
     }
 }

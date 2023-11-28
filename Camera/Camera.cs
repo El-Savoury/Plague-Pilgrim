@@ -86,6 +86,8 @@ namespace Plague_Pilgrim
                 mPosition.Y -= 6.0f * Utility.GetDeltaTime(gameTime);
             }
 
+            //mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
+
             if (mPosition.Y < END_POINT)
             {
                 mPosition.Y = END_POINT;

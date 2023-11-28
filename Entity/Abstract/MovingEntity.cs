@@ -56,10 +56,8 @@ namespace Plague_Pilgrim
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-
             TileManager.ResolveEntityTileCollision(gameTime, this);
             ApplyVelocity(gameTime);
-
 
         }
 
