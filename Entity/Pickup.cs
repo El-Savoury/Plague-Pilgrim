@@ -3,7 +3,7 @@
     internal class Pickup : MovingEntity
     {
         #region rConstants
-        
+
         const float SPEED = 10.0f;
 
         #endregion rConstants
@@ -15,7 +15,7 @@
 
         #region rMembers
 
-        private int mFood;
+        private Inventory mInventory = new Inventory();
 
         #endregion rMembers
 
@@ -28,12 +28,14 @@
         #region rInitialisation
 
         /// <summary>
-        /// Construct player at position.
+        /// Construct pickup at position.
         /// </summary>
         /// <param name="pos">Starting position</param>
         public Pickup(Vector2 pos) : base(pos)
         {
-            mFood = RandomManager.Next(1,6);
+            mInventory.AddItem("Food", RandomManager.Next(0, 6));
+            mInventory.AddItem("Herbs", RandomManager.Next(0, 6));
+            mInventory.AddItem("Vinegar", RandomManager.Next(0, 6));
         }
 
 
@@ -43,7 +45,7 @@
         /// <param name="content">Monogame content manager</param>
         public override void LoadContent()
         {
-            mTexture = Main.GetContentManager().Load<Texture2D>("Boats/boat");
+            mTexture = Main.GetContentManager().Load<Texture2D>("Items/crate");
         }
 
         #endregion rInitialisation
@@ -64,7 +66,7 @@
         public override void Update(GameTime gameTime)
         {
             mVelocity = new Vector2(0, SPEED);
-            
+
             base.Update(gameTime);
         }
 
@@ -105,9 +107,17 @@
         /// <param name="entity">Entity that is colliding with player</param>
         public override void OnCollideEntity(Entity entity)
         {
-            Inventory.Add(mFood);
-            EntityManager.DeleteEntity(this);
+            if (entity is Player)
+            {
+                foreach (KeyValuePair<string, int> item in mInventory.Contents())
+                {
+                    InventoryManager.AddItem(InventoryManager.mGlobalInventory, item.Key, item.Value);
+                }
+            }
+
+            EntityManager.DeleteEntity(this); 
         }
+
 
         /// <summary>
         /// React to collision 
@@ -117,13 +127,14 @@
         {
         }
 
-          /// <summary>
+
+        /// <summary>
         /// Decrease players velocity
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.2f); }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.2f); }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.5f); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.5f); }
         }
 
         #endregion rCollision

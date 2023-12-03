@@ -75,23 +75,17 @@ namespace Plague_Pilgrim
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            if (mTargetEntity.GetVelocity().Y < 0)
+            if (mTargetEntity.GetVelocity().Y <= 0)
             {
-                float velocityY = mTargetEntity.VelocityToDisplacement(gameTime).Y;
-
-                mPosition.Y += Math.Clamp(velocityY, - 6.0f * Utility.GetDeltaTime(gameTime), 0);
+                float VelY = mTargetEntity.GetVelocity().Y;
+                mPosition.Y += Math.Clamp(VelY, -4, 0) * Utility.GetDeltaTime(gameTime);
             }
-            else if (mTargetEntity.GetVelocity() != Vector2.Zero)
+            else
             {
-                mPosition.Y -= 6.0f * Utility.GetDeltaTime(gameTime);
+                mPosition.Y -= 4 * Utility.GetDeltaTime(gameTime);
             }
 
-            //mPosition.Y -= 3.0f * Utility.GetDeltaTime(gameTime);
-
-            if (mPosition.Y < END_POINT)
-            {
-                mPosition.Y = END_POINT;
-            }
+            if (mPosition.Y < END_POINT) { mPosition.Y = END_POINT; }
         }
 
         #endregion rUpdate

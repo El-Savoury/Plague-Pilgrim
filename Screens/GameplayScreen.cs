@@ -101,7 +101,7 @@
             TileManager.Draw(info);
             EntityManager.Draw(info);
 
-            Inventory.Draw(info, (int)mCamera.GetPos().X, (int)mCamera.GetPos().Y);
+            InventoryManager.Draw(info, 650, (int)mCamera.GetPos().Y);
 
             mCamera.EndSpriteBatch(info);
 

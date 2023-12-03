@@ -7,7 +7,9 @@
     {
         #region rConstants
 
-        const float SPEED = 10.0f;
+        const int DEFAULT_SPEED = 4;
+        const int SLOW_SPEED = 2;
+        const int FAST_SPEED = 10;
 
         #endregion rConstants
 
@@ -67,17 +69,20 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mVelocity = new Vector2(0, -SPEED);
+
 
             // if (GetInputDirection() != Vector2.Zero)
             // {
             //     mVelocity = GetInputDirection() * SPEED;
             // }
 
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -SPEED * 2; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = SPEED * 2; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -SPEED * 2; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = SPEED * 2; }
+            mVelocity = new Vector2(0, -DEFAULT_SPEED);
+
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -FAST_SPEED; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = FAST_SPEED; }
+            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -FAST_SPEED; }
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = FAST_SPEED; }
+           
 
             base.Update(gameTime);
         }
@@ -107,8 +112,8 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.1f); }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.1f); }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SLOW_SPEED); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SLOW_SPEED); }
         }
 
         #endregion rUpdate
