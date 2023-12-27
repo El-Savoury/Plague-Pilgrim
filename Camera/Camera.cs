@@ -9,7 +9,7 @@ namespace Plague_Pilgrim
     {
         public SpriteBatchOptions()
         {
-            mSortMode = SpriteSortMode.BackToFront;
+            mSortMode = SpriteSortMode.Deferred;
             mBlend = BlendState.AlphaBlend;
             mSamplerState = SamplerState.PointClamp;
             mDepthStencilState = DepthStencilState.Default;
@@ -75,15 +75,15 @@ namespace Plague_Pilgrim
         /// </summary>
         public void Update(GameTime gameTime)
         {
-            if (mTargetEntity.GetVelocity().Y <= 0)
-            {
-                float VelY = mTargetEntity.GetVelocity().Y;
-                mPosition.Y += Math.Clamp(VelY, -4, 0) * Utility.GetDeltaTime(gameTime);
-            }
-            else
-            {
-                mPosition.Y -= 4 * Utility.GetDeltaTime(gameTime);
-            }
+            //if (mTargetEntity.GetVelocity().Y <= 0)
+            //{
+            //    float VelY = mTargetEntity.GetVelocity().Y;
+            //    mPosition.Y += Math.Clamp(VelY, -4, 0) * Utility.GetDeltaTime(gameTime);
+            //}
+            //else
+            //{
+            //    mPosition.Y -= 4 * Utility.GetDeltaTime(gameTime);
+            //}
 
             if (mPosition.Y < END_POINT) { mPosition.Y = END_POINT; }
         }

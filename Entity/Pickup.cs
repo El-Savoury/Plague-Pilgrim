@@ -133,8 +133,8 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.5f); }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.5f); }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SPEED * 0.8f); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SPEED * 0.8f); }
         }
 
         #endregion rCollision

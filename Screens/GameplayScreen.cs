@@ -71,7 +71,7 @@
 
             mCamera.Update(gameTime);
             EntityManager.Update(gameTime);
-            TileManager.Update(gameTime);
+            TileManager.UpdateVisibleTiles(gameTime, new Rect2f(mCamera.GetPos(), GetScreenSize().Width, GetScreenSize().Height));
 
             SpawnPickups();
             mPlayer.ClamptoCameraView(mCamera);

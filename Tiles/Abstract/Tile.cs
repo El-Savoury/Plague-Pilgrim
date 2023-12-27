@@ -19,7 +19,7 @@
 
         protected Vector2 mPosition;
         protected Texture2D mTexture;
-        protected bool mEnabled = true;
+        protected bool mEnabled = false;
         protected Point mTileMapIndex;
 
         #endregion rMembers
@@ -130,7 +130,7 @@
         {
             return new Rect2f(mPosition, mPosition + new Vector2(TILE_SIZE, TILE_SIZE));
         }
-        
+
         #endregion rCollision
 
 
@@ -157,6 +157,15 @@
         public virtual bool IsEnabled()
         {
             return mEnabled;
+        }
+
+
+        /// <summary>
+        /// Enbable or Disable a tile
+        /// </summary>
+        public virtual void SetEnabled(bool enabled)
+        {
+            mEnabled = enabled;
         }
 
 

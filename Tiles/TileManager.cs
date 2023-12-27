@@ -1,4 +1,6 @@
-﻿namespace Plague_Pilgrim
+﻿using System.Security.Cryptography;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Info required to init tile map
@@ -132,18 +134,33 @@
 
         #region rUpdate
 
-        public static void Update(GameTime gameTime)
+        public static void UpdateVisibleTiles(GameTime gameTime, Rect2f box)
         {
-            for (int x = 0; x < mTileMap.GetLength(0); x++)
+            Rectangle visibleTiles = PossibleIntersectTiles(box);
+
+            for (int x = visibleTiles.X; x <= visibleTiles.X + visibleTiles.Width; x++)
             {
-                for (int y = 0; y < mTileMap.GetLength(1); y++)
+                for (int y = visibleTiles.Y; y <= visibleTiles.Y + visibleTiles.Height; y++)
                 {
-                    mTileMap[x, y].Update(gameTime);
+                    mTileMap[x, y].SetEnabled(true);
+                }
+            }
+
+            foreach (Tile tile in mTileMap)
+            {
+                if (tile.IsEnabled())
+                {
+                    tile.Update(gameTime);
+
+                    if (tile.GetBounds().min.Y > box.max.Y)
+                    {
+                        tile.SetEnabled(false);
+                    }
                 }
             }
         }
 
-        #endregion rUdate
+        #endregion rUpdate
 
 
 
@@ -156,23 +173,14 @@
 
         public static void Draw(DrawInfo info)
         {
-            Point mapPos = new Point((int)mTileMapPos.X, (int)mTileMapPos.Y);
-
             foreach (Tile tile in mTileMap)
             {
-                Rectangle sourceRect = new Rectangle((int)tile.GetBounds().min.X, (int)tile.GetBounds().min.Y, mTileSize, mTileSize);
-                DrawTile(info, sourceRect, tile);
+                if (tile.IsEnabled())
+                {
+                    Rectangle sourceRect = new Rectangle((int)tile.GetBounds().min.X, (int)tile.GetBounds().min.Y, mTileSize, mTileSize);
+                    DrawTile(info, sourceRect, tile);
+                }
             }
-
-
-            //for (int x = 0; x < mTileMap.GetLength(0); x++)
-            //{
-            //    for (int y = 0; y < mTileMap.GetLength(1); y++)
-            //    {
-            //        Rectangle drawRect = new Rectangle(mapPos.X + x * mTileSize, mapPos.Y - y * mTileSize, mTileSize, mTileSize);
-            //        DrawTile(info, drawRect, mTileMap[x, y]);
-            //    }
-            //}
         }
 
 
@@ -184,7 +192,6 @@
         /// <param name="tile"></param>
         private static void DrawTile(DrawInfo info, Rectangle drawDestination, Tile tile)
         {
-            //Rectangle sourceRect = new Rectangle(tile.GetMapIndex().X * mTileSize, tile.GetMapIndex().Y * mTileSize, mTileSize, mTileSize);
             Draw2D.DrawTexture(info, tile.GetTexture(), new Vector2(drawDestination.X, drawDestination.Y));
         }
 

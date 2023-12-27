@@ -8,7 +8,7 @@
         #region rConstants
 
         const int DEFAULT_SPEED = 4;
-        const int SLOW_SPEED = 2;
+        const int SLOW_SPEED = 3;
         const int FAST_SPEED = 10;
 
         #endregion rConstants
@@ -112,8 +112,8 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (SLOW_SPEED); }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (SLOW_SPEED); }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * SLOW_SPEED; }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * SLOW_SPEED; }
         }
 
         #endregion rUpdate
