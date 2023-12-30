@@ -69,12 +69,13 @@
         {
             if (InputManager.KeyPressed(Controls.Confirm)) { TileManager.LoadTileMap(); }
 
-            mCamera.Update(gameTime);
+            
             EntityManager.Update(gameTime);
+           // mCamera.Update(gameTime);
             TileManager.UpdateVisibleTiles(gameTime, new Rect2f(mCamera.GetPos(), GetScreenSize().Width, GetScreenSize().Height));
 
             SpawnPickups();
-            mPlayer.ClamptoCameraView(mCamera);
+           // mPlayer.ClamptoCameraView(mCamera);
         }
 
         #endregion rUpdate

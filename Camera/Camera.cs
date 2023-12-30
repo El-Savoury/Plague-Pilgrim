@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Tracing;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics.Tracing;
 
 namespace Plague_Pilgrim
 {
@@ -32,6 +33,7 @@ namespace Plague_Pilgrim
         #region rConstants
 
         private const int END_POINT = 0;
+        private const int DEFAULT_SPEED = 4;
 
         #endregion rConstants
 
@@ -75,6 +77,8 @@ namespace Plague_Pilgrim
         /// </summary>
         public void Update(GameTime gameTime)
         {
+            mPosition.Y -= DEFAULT_SPEED * Utility.GetDeltaTime(gameTime);
+
             //if (mTargetEntity.GetVelocity().Y <= 0)
             //{
             //    float VelY = mTargetEntity.GetVelocity().Y;
@@ -86,6 +90,8 @@ namespace Plague_Pilgrim
             //}
 
             if (mPosition.Y < END_POINT) { mPosition.Y = END_POINT; }
+
+            ClampEntityToBounds(mTargetEntity);
         }
 
         #endregion rUpdate
@@ -167,6 +173,21 @@ namespace Plague_Pilgrim
         public void TargetEntity(MovingEntity entity)
         {
             mTargetEntity = entity;
+        }
+
+
+        /// <summary>
+        /// Clamp target entity to bounds of camera view
+        /// </summary>
+        /// <param name="entity"></param>
+        public void ClampEntityToBounds(Entity entity)
+        {
+            Rect2f view = new Rect2f(GetPos(), 800, 800); // Screen 
+
+            float posX = Math.Clamp(entity.GetPos().X, view.min.X, view.max.X - entity.ColliderBounds().Width);
+            float posY = Math.Clamp(entity.GetPos().Y, view.min.Y, view.max.Y - entity.ColliderBounds().Height);
+
+            entity.SetPos(new Vector2(posX, posY));
         }
 
         #endregion rUtility

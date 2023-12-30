@@ -7,9 +7,7 @@
     {
         #region rConstants
 
-        const int DEFAULT_SPEED = 4;
-        const int SLOW_SPEED = 3;
-        const int FAST_SPEED = 10;
+        const int DEFAULT_SPEED = 6;
 
         #endregion rConstants
 
@@ -69,23 +67,23 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
+            mVelocity = new Vector2(0, -4);
 
+            //if (GetInputDirection() != Vector2.Zero)
+            //{
+            //    mVelocity = GetInputDirection() * DEFAULT_SPEED;
+            //}
 
-            // if (GetInputDirection() != Vector2.Zero)
-            // {
-            //     mVelocity = GetInputDirection() * SPEED;
-            // }
+            // TODO: UN-MAGIC NUMBER THESE TEMP CONTROLS
 
-            mVelocity = new Vector2(0, -DEFAULT_SPEED);
-
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X = -FAST_SPEED; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X = FAST_SPEED; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y = -FAST_SPEED; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y = FAST_SPEED; }
-           
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 8; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 8; }
+            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 4; }
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 8; }
 
             base.Update(gameTime);
         }
+
 
         /// <summary>
         /// Calculate player movement based on directional input 
@@ -112,8 +110,8 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * SLOW_SPEED; }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * SLOW_SPEED; }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (DEFAULT_SPEED * 0.6f); }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (DEFAULT_SPEED * 0.6f); }
         }
 
         #endregion rUpdate
@@ -183,7 +181,5 @@
         }
 
         #endregion mUtility
-
-
     }
 }
