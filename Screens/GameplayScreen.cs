@@ -71,11 +71,11 @@
 
             
             EntityManager.Update(gameTime);
-           // mCamera.Update(gameTime);
+            mCamera.Update(gameTime);
+            
             TileManager.UpdateVisibleTiles(gameTime, new Rect2f(mCamera.GetPos(), GetScreenSize().Width, GetScreenSize().Height));
 
             SpawnPickups();
-           // mPlayer.ClamptoCameraView(mCamera);
         }
 
         #endregion rUpdate
@@ -101,7 +101,7 @@
 
             TileManager.Draw(info);
             EntityManager.Draw(info);
-
+            
             InventoryManager.Draw(info, 650, (int)mCamera.GetPos().Y);
 
             mCamera.EndSpriteBatch(info);

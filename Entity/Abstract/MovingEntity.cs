@@ -59,6 +59,9 @@ namespace Plague_Pilgrim
             TileManager.ResolveEntityTileCollision(gameTime, this);
             ApplyVelocity(gameTime);
 
+            // Cast position to ints to prevent jerky sub pixel movement
+            mPosition.X = (int)Math.Round(mPosition.X);
+            mPosition.Y = (int)Math.Round(mPosition.Y);
         }
 
 

@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        const int DEFAULT_SPEED = 6;
+        const int DEFAULT_SPEED = 4;
 
         #endregion rConstants
 
@@ -67,7 +67,7 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            mVelocity = new Vector2(0, -4);
+            mVelocity = new Vector2(0, -DEFAULT_SPEED);
 
             //if (GetInputDirection() != Vector2.Zero)
             //{
@@ -80,6 +80,8 @@
             if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 8; }
             if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 4; }
             if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 8; }
+
+            
 
             base.Update(gameTime);
         }
@@ -110,8 +112,8 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * (DEFAULT_SPEED * 0.6f); }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * (DEFAULT_SPEED * 0.6f); }
+            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * 20; }
+            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * 20; }
         }
 
         #endregion rUpdate
@@ -171,14 +173,6 @@
 
 
         #region mUtility
-
-        public void ClamptoCameraView(Camera cam)
-        {
-            Rect2f view = new Rect2f(cam.GetPos(), 800, 800);
-
-            mPosition.X = Math.Clamp(mPosition.X, view.min.X, view.max.X - mTexture.Width);
-            mPosition.Y = Math.Clamp(mPosition.Y, view.min.Y, view.max.Y - mTexture.Height);
-        }
 
         #endregion mUtility
     }
