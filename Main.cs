@@ -1,4 +1,8 @@
-﻿namespace Plague_Pilgrim
+﻿using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Threading;
+
+namespace Plague_Pilgrim
 {
     /// <summary>
     /// Program top level
@@ -8,6 +12,8 @@
         #region rConstants
 
         private const double FRAME_RATE = 30d;
+        private const int MIN_WINDOW_HEIGHT = 480;
+        private const float ASPECT_RATIO = 1.77774f;
 
         #endregion rConstants
 
@@ -21,6 +27,7 @@
         private GraphicsDeviceManager mGraphics;
         private SpriteBatch mSpriteBatch;
         private Texture2D mDummyTexture;
+        private Rectangle mWindowedSize;
 
         // Hack to access main class
         private static Main mSelf;
@@ -39,8 +46,6 @@
         /// </summary>
         public Main()
         {
-            mSelf = this;
-
             // XNA
             mGraphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -49,6 +54,11 @@
             // Set FPS
             IsFixedTimeStep = true;
             TargetElapsedTime = System.TimeSpan.FromSeconds(1d / FRAME_RATE);
+
+            // Handle user window resizing
+            Window.ClientSizeChanged += OnResize;
+
+            mSelf = this;
         }
 
 
@@ -60,13 +70,12 @@
             mGraphics.PreferredBackBufferWidth = 800;
             mGraphics.PreferredBackBufferHeight = 800;
 
+            // SetWindowHeight(MIN_WINDOW_HEIGHT);
             mGraphics.IsFullScreen = false;
             mGraphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
-            Window.Title = "Plague Pilgrim";
-
-            InputManager.SetControls();
+            Window.Title = "Plague Pilgrims";
 
             base.Initialize();
         }
@@ -84,8 +93,11 @@
 
             FontManager.LoadAllFonts(Content);
             ScreenManager.LoadAllScreens(mGraphics);
+            InputManager.Init();
+            InventoryManager.Init();
+
+            // Set first screen that opens when game is run
             ScreenManager.ActivateScreen(ScreenType.Gameplay);
-            InventoryManager.LoadGlobalInventory();
         }
         #endregion rInitialisation
 
@@ -99,13 +111,25 @@
         /// <summary>
         /// Update game
         /// </summary>
-        /// <param name="gameTime"></param>
+        /// <param name="gameTime">Frame time</param>
         protected override void Update(GameTime gameTime)
         {
             // Record elapsed time
             TimeManager.Update(gameTime);
 
-            // Update active screen.
+            HandleWindowControls();
+            UpdateGame(gameTime);
+
+            base.Update(gameTime);
+        }
+
+
+        /// <summary>
+        /// Update everything on the active screen
+        /// </summary>
+        /// <param name="gameTime">Frame time</param>
+        private void UpdateGame(GameTime gameTime)
+        {
             Screen screen = ScreenManager.GetActiveScreen();
 
             InputManager.Update(gameTime);
@@ -114,8 +138,47 @@
             {
                 screen.Update(gameTime);
             }
+        }
 
-            base.Update(gameTime);
+
+        /// <summary>
+        /// Handle user pressing fullscreen or exit keys
+        /// </summary>
+        private void HandleWindowControls()
+        {
+            if (InputManager.KeyPressed(Controls.Fullscreen))
+            {
+                ToggleFullscreen();
+            }
+
+            if (InputManager.KeyPressed(Controls.Escape))
+            {
+                Exit();
+            }
+        }
+
+
+        /// <summary>
+		/// Enter/leave full screen
+		/// </summary>
+        private void ToggleFullscreen()
+        {
+            if (mGraphics.IsFullScreen)
+            {
+                mGraphics.IsFullScreen = false;
+                mGraphics.PreferredBackBufferWidth = mWindowedSize.Width;
+                mGraphics.PreferredBackBufferHeight = mWindowedSize.Height;
+            }
+            else
+            {
+                mWindowedSize = GraphicsDevice.PresentationParameters.Bounds;
+                mGraphics.IsFullScreen = true;
+
+                mGraphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+                mGraphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            }
+
+            mGraphics.ApplyChanges();
         }
 
         #endregion rUpdate
@@ -147,15 +210,15 @@
             if (screen != null)
             {
                 RenderTarget2D screenTargetRef = screen.DrawToRenderTarget(frameInfo);
-                GraphicsDevice.SetRenderTarget(null);
 
+                GraphicsDevice.SetRenderTarget(null);
 
                 mSpriteBatch.Begin(SpriteSortMode.BackToFront,
                                                         BlendState.AlphaBlend,
                                                         SamplerState.PointClamp,
                                                         DepthStencilState.Default,
                                                         RasterizerState.CullNone);
-                DrawScreenAsTexture(frameInfo, screenTargetRef);
+                DrawScreenPixelPerfect(frameInfo, screenTargetRef);
                 mSpriteBatch.End();
             }
 
@@ -163,15 +226,72 @@
         }
 
 
-        /// <summary>
-        /// Draw render target containing active screen as a single texture
-        /// </summary>
-        /// <param name="info">Info needed to draw</param>
-        /// <param name="screen">Screen to draw</param>
-        private void DrawScreenAsTexture(DrawInfo info, RenderTarget2D screen)
+
+        private void DrawScreenPixelPerfect(DrawInfo info, RenderTarget2D target)
         {
-            Draw2D.DrawTexture(info, screen, Vector2.Zero);
+            Rectangle screenRect = info.device.PresentationParameters.Bounds;
+
+            float scaleX = (float)screenRect.Width / target.Width;
+            float scaleY = (float)screenRect.Height / target.Height;
+            float scale = Math.Min(scaleX, scaleY);
+
+            int newWidth = (int)(target.Width * scale);
+            int newHeight = (int)(target.Height * scale);
+
+            int posX = (screenRect.Width - newWidth) / 2;
+            int posY = (screenRect.Height - newHeight) / 2;
+
+            Rectangle destRect = new Rectangle(posX, posY, newWidth, newHeight);
+
+            //int multiplier = (int)MathF.Min(screenRect.Width / screen.Width, screenRect.Height / screen.Height);
+
+            //int finalWidth = screen.Width * multiplier;
+            //int finalHeight = screen.Height * multiplier;
+
+            //Rectangle destRect = new Rectangle((screenRect.Width - finalWidth) / 2, (screenRect.Height - finalHeight) / 2, finalWidth, finalHeight);
+
+            Draw2D.DrawTexture(info, target, destRect);
         }
+
+
+        /// <summary>
+        /// Callback for re-sizing the screen
+        /// </summary>
+        /// <param name="sender">Sender of this event</param>
+        /// <param name="eventArgs">Event args</param>
+        private void OnResize(object sender, EventArgs eventArgs)
+        {
+            if (mGraphics.IsFullScreen)
+            {
+                return;
+            }
+
+            int minWidth = (int)(ASPECT_RATIO * MIN_WINDOW_HEIGHT);
+
+            if (Window.ClientBounds.Height >= MIN_WINDOW_HEIGHT && Window.ClientBounds.Width >= minWidth)
+            {
+                return;
+            }
+            else
+            {
+                SetWindowHeight(MIN_WINDOW_HEIGHT);
+            }
+
+        }
+
+
+        /// <summary>
+		/// Set window height so it keeps the aspect ratio
+		/// </summary>
+		/// <param name="height">New window height</param>
+        private void SetWindowHeight(int height)
+        {
+            mGraphics.PreferredBackBufferWidth = (int)(height * ASPECT_RATIO);
+            mGraphics.PreferredBackBufferHeight = height;
+            mGraphics.ApplyChanges();
+        }
+
+
 
         #endregion rDraw
 

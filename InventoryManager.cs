@@ -75,6 +75,15 @@ namespace Plague_Pilgrim
         #region rInitialisation
 
         /// <summary>
+        /// Initialise inventory manager
+        /// </summary>
+        public static void Init()
+        {
+            LoadGlobalInventory();
+        }
+
+
+        /// <summary>
         /// Load default global inventory values.
         /// </summary>
         public static void LoadGlobalInventory()

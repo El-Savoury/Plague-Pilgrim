@@ -12,7 +12,10 @@
         Confirm,
         Backspace,
         Randomise,
-        Escape
+        Escape,
+
+        // Window controls
+        Fullscreen
     }
 
     /// <summary>
@@ -34,9 +37,18 @@
         #region rInitialisation
 
         /// <summary>
+        /// Initialise input manager
+        /// </summary>
+        public static void Init()
+        {
+            SetDefaultControls();
+        }
+
+
+        /// <summary>
         /// Set default input bindings.
         /// </summary>
-        public static void SetControls()
+        public static void SetDefaultControls()
         {
             // Arrow Keys
             mInputKeys.Add(Controls.Left, new InputKey(Keys.Left));
@@ -45,10 +57,13 @@
             mInputKeys.Add(Controls.Down, new InputKey(Keys.Down));
 
             // Menu controls
-            mInputKeys.Add(Controls.Confirm, new InputKey(Keys.Space));
+            mInputKeys.Add(Controls.Confirm, new InputKey(Keys.Enter));
             mInputKeys.Add(Controls.Backspace, new InputKey(Keys.Back));
             mInputKeys.Add(Controls.Randomise, new InputKey(Keys.Tab));
             mInputKeys.Add(Controls.Escape, new InputKey(Keys.Escape));
+
+            // Window controls
+            mInputKeys.Add(Controls.Fullscreen, new InputKey(Keys.F11));
         }
 
         #endregion rInititialisation

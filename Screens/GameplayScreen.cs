@@ -102,6 +102,7 @@
             TileManager.Draw(info);
             EntityManager.Draw(info);
             
+            // Temp
             InventoryManager.Draw(info, 650, (int)mCamera.GetPos().Y);
 
             mCamera.EndSpriteBatch(info);

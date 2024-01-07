@@ -29,6 +29,15 @@
 
 
         /// <summary>
+        /// Draw a texture at a position
+        /// </summary>
+        public static void DrawTexture(DrawInfo info, Texture2D texture, Rectangle rect)
+        {
+            info.spriteBatch.Draw(texture, rect, Color.White);
+        }
+
+
+        /// <summary>
         /// Draw string at position (top left)
         /// </summary>
         public static void DrawString(DrawInfo info, SpriteFont font, string text, Vector2 pos, Color colour)
