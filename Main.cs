@@ -67,8 +67,8 @@ namespace Plague_Pilgrim
         /// </summary>
         protected override void Initialize()
         {
-            mGraphics.PreferredBackBufferWidth = 800;
-            mGraphics.PreferredBackBufferHeight = 800;
+            mGraphics.PreferredBackBufferWidth = 640;
+            mGraphics.PreferredBackBufferHeight = 360;
 
             // SetWindowHeight(MIN_WINDOW_HEIGHT);
             mGraphics.IsFullScreen = false;
@@ -204,7 +204,7 @@ namespace Plague_Pilgrim
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // Draw active screen.
+            // Draw active screen
             Screen screen = ScreenManager.GetActiveScreen();
 
             if (screen != null)
@@ -231,8 +231,8 @@ namespace Plague_Pilgrim
         {
             Rectangle screenRect = info.device.PresentationParameters.Bounds;
 
-            float scaleX = (float)screenRect.Width / target.Width;
-            float scaleY = (float)screenRect.Height / target.Height;
+            float scaleX = MathF.Round((float)screenRect.Width / target.Width);
+            float scaleY = MathF.Round((float)screenRect.Height / target.Height);
             float scale = Math.Min(scaleX, scaleY);
 
             int newWidth = (int)(target.Width * scale);
@@ -242,13 +242,6 @@ namespace Plague_Pilgrim
             int posY = (screenRect.Height - newHeight) / 2;
 
             Rectangle destRect = new Rectangle(posX, posY, newWidth, newHeight);
-
-            //int multiplier = (int)MathF.Min(screenRect.Width / screen.Width, screenRect.Height / screen.Height);
-
-            //int finalWidth = screen.Width * multiplier;
-            //int finalHeight = screen.Height * multiplier;
-
-            //Rectangle destRect = new Rectangle((screenRect.Width - finalWidth) / 2, (screenRect.Height - finalHeight) / 2, finalWidth, finalHeight);
 
             Draw2D.DrawTexture(info, target, destRect);
         }
@@ -261,10 +254,7 @@ namespace Plague_Pilgrim
         /// <param name="eventArgs">Event args</param>
         private void OnResize(object sender, EventArgs eventArgs)
         {
-            if (mGraphics.IsFullScreen)
-            {
-                return;
-            }
+            if (mGraphics.IsFullScreen) { return; }
 
             int minWidth = (int)(ASPECT_RATIO * MIN_WINDOW_HEIGHT);
 

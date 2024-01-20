@@ -98,7 +98,7 @@ namespace Plague_Pilgrim
 
             // Cast position to ints to prevent jerky sub pixel movement
             mPosition.X = (int)Math.Round(mPosition.X);
-            mPosition.Y = (int)Math.Round(mPosition.Y);            
+            mPosition.Y = (int)Math.Round(mPosition.Y);
         }
 
         #endregion rUpdate
@@ -188,21 +188,21 @@ namespace Plague_Pilgrim
         /// <param name="entity"></param>
         public void ClampEntityToBounds(Entity entity)
         {
-            Rect2f view = new Rect2f(GetPos(), 800, 800); // Screen size TBC
-            
+            Rect2f view = new Rect2f(new Vector2(GetPos().X, GetPos().Y), ScreenManager.GetActiveScreen().GetScreenSize().Width, ScreenManager.GetActiveScreen().GetScreenSize().Height); // Screen size TBC
+
             float posX = Math.Clamp(entity.GetPos().X, view.min.X, view.max.X - entity.ColliderBounds().Width);
             float posY = entity.GetPos().Y;
-        
+
             if (mPosition.Y > END_POINT)
             {
-               posY = Math.Clamp(entity.GetPos().Y, view.min.Y, view.max.Y - entity.ColliderBounds().Height);
+                posY = Math.Clamp(posY, view.min.Y, view.max.Y - entity.ColliderBounds().Height);
             }
             else
             {
                 if (posY > view.max.Y - entity.ColliderBounds().Height)
                 {
-                   posY = view.max.Y - entity.ColliderBounds().Height;
-                }                   
+                    posY = view.max.Y - entity.ColliderBounds().Height;
+                }
             }
 
             entity.SetPos(new Vector2(posX, posY));

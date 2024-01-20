@@ -15,6 +15,10 @@
         {
         }
 
+
+        /// <summary>
+        /// Load texture
+        /// </summary>
         public override void LoadContent()
         {
             mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/rock");
@@ -37,8 +41,6 @@
         public override void OnEntityIntersect(MovingEntity entity)
         {
             // TODO: Stop ship and make it flash
-
-            mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/rapids");
         }
 
         #endregion rUpdate

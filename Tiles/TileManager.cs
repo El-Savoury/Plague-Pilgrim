@@ -74,13 +74,26 @@ namespace Plague_Pilgrim
                 {
                     Vector2 tilePos = new Vector2(mTileMapPos.X + x * mTileSize, mTileMapPos.Y + y * mTileSize);
 
-                    if (x == RandomManager.Next(0, mTileMap.GetLength(0)))
+                    int rand = RandomManager.Next(0, 10);
+
+                    switch (rand)
                     {
-                        mTileMap[x, y] = new SlowTile(tilePos);
-                    }
-                    else
-                    {
-                        mTileMap[x, y] = new EmptyTile(tilePos);
+                        case 0:
+                            mTileMap[x, y] = new RapidsTile(tilePos);
+                            break;
+
+                        case 1:
+                            mTileMap[x, y] = new SlowTile(tilePos);
+                            break;
+
+                        case 2:
+                            mTileMap[x, y] = new EmptyTile(tilePos);
+                            break;
+
+                        default:
+                            mTileMap[x, y] = new EmptyTile(tilePos);
+                            break;
+
                     }
 
                     mTileMap[x, y].LoadContent();

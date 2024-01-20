@@ -76,12 +76,12 @@
 
             // TODO: UN-MAGIC NUMBER THESE TEMP CONTROLS
 
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 8; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 8; }
-            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 4; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 8; }
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 4; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 4; }
+            if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 1; }
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 6; }
 
-            
+
 
             base.Update(gameTime);
         }
@@ -112,8 +112,11 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * 20; }
-            if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * 20; }
+            //if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * 20; }
+            //if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * 20; }
+
+            mVelocity.X = Math.Sign(mVelocity.X);
+            mVelocity.Y = Math.Sign(mVelocity.Y) * 2;
         }
 
         #endregion rUpdate

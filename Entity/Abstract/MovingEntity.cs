@@ -57,6 +57,7 @@ namespace Plague_Pilgrim
         public override void Update(GameTime gameTime)
         {
             TileManager.ResolveEntityTileCollision(gameTime, this);
+           
             ApplyVelocity(gameTime);
 
             // Cast position to ints to prevent jerky sub pixel movement
@@ -103,9 +104,16 @@ namespace Plague_Pilgrim
             mPosition += VelocityToDisplacement(gameTime);
         }
 
+        /// <summary>
+        /// Increase the velocity of moving entity
+        /// </summary>
+        public virtual void IncreaseVelocity(int x, int y)
+        {
+            mVelocity += new Vector2(x, y);
+        }
 
         /// <summary>
-        /// Lower the velocity of moving entity
+        /// Decrease the velocity of moving entity
         /// </summary>
         public virtual void DecreaseVelocity()
         {

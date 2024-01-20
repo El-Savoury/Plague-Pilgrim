@@ -12,6 +12,9 @@
         {
         }
 
+        /// <summary>
+        /// Load texture
+        /// </summary>
         public override void LoadContent()
         {
             mTexture = Main.GetContentManager().Load<Texture2D>("Tiles/ground");

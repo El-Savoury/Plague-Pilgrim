@@ -103,7 +103,7 @@
             EntityManager.Draw(info);
             
             // Temp
-            InventoryManager.Draw(info, 650, (int)mCamera.GetPos().Y);
+            InventoryManager.Draw(info, mGraphics.GraphicsDevice.PresentationParameters.BackBufferWidth - 120, (int)mCamera.GetPos().Y);
 
             mCamera.EndSpriteBatch(info);
 
