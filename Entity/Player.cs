@@ -76,12 +76,10 @@
 
             // TODO: UN-MAGIC NUMBER THESE TEMP CONTROLS
 
-            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 4; }
-            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 4; }
+            if (InputManager.KeyHeld(Controls.Left)) { mVelocity.X -= 6; }
+            if (InputManager.KeyHeld(Controls.Right)) { mVelocity.X += 6; }
             if (InputManager.KeyHeld(Controls.Up)) { mVelocity.Y -= 1; }
-            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 6; }
-
-
+            if (InputManager.KeyHeld(Controls.Down)) { mVelocity.Y += 10; }
 
             base.Update(gameTime);
         }
@@ -112,11 +110,20 @@
         /// </summary>
         public override void DecreaseVelocity()
         {
-            //if (mVelocity.X != 0) { mVelocity.X = Math.Sign(mVelocity.X) * 20; }
-            //if (mVelocity.Y != 0) { mVelocity.Y = Math.Sign(mVelocity.Y) * 20; }
+             { mVelocity.X = Math.Sign(mVelocity.X) * 2 ; }
+              
+               // mVelocity.Y = Math.Sign(mVelocity.Y) + (mVelocity.Y / 0.4f); 
 
-            mVelocity.X = Math.Sign(mVelocity.X);
-            mVelocity.Y = Math.Sign(mVelocity.Y) * 2;
+              if(mVelocity.Y < 0) 
+                {
+                    mVelocity.Y = MathF.Round(mVelocity.Y * 0.6f);
+                }
+               else if(mVelocity.Y > 0) 
+               {
+                mVelocity.Y = MathF.Round(mVelocity.Y * 0.6f);
+                } 
+
+             
         }
 
         #endregion rUpdate
@@ -137,6 +144,12 @@
         public override void Draw(DrawInfo info)
         {
             Draw2D.DrawTexture(info, mTexture, mPosition);
+
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mVelocity), new Vector2(mPosition.X, mPosition.Y -20), Color.White);
+
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mPosition), new Vector2(mPosition.X, mPosition.Y -50), Color.White);
+
+
         }
 
         #endregion rDraw

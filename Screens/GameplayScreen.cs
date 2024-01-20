@@ -71,7 +71,7 @@
 
             
             EntityManager.Update(gameTime);
-            mCamera.Update(gameTime);
+            //mCamera.Update(gameTime);
             
             TileManager.UpdateVisibleTiles(gameTime, new Rect2f(mCamera.GetPos(), GetScreenSize().Width, GetScreenSize().Height));
 

@@ -62,7 +62,7 @@ namespace Plague_Pilgrim
 
             // Cast position to ints to prevent jerky sub pixel movement
             mPosition.X = (int)Math.Round(mPosition.X);
-            mPosition.Y = (int)Math.Round(mPosition.Y);
+            mPosition.Y = (int)(mPosition.Y);
         }
 
 
