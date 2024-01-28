@@ -3,7 +3,7 @@
     /// <summary>
     /// A box made from a texture with nine sections
     /// </summary>
-    public class NineSliceBox
+    public abstract class NineSliceBox
     {
         #region rConstants
 
@@ -20,7 +20,7 @@
         protected bool mEnabled = true; // Disabled entities will not be drawn or updated
         protected Vector2 mPosition;
         protected Vector2 mSize;
-        private Vector2 mSizeInSlices = Vector2.Zero;
+        protected Vector2 mSizeInSlices = Vector2.Zero;
         protected Color mColour;
 
         //protected Point mCellPadding = new Point(2, 0); // Space between multiple cells
@@ -34,10 +34,10 @@
 
         #region rInitialisation
 
-        public NineSliceBox(Vector2 pos, Vector2 size)
+        public NineSliceBox(Vector2 pos, int width = 0, int height = 0)
         {
             mPosition = pos;
-            mSize = size;
+            mSize = new Vector2(width, height);
             mSizeInSlices = GetSizeInSlices();
         }
 
@@ -53,7 +53,7 @@
         /// <summary>
         /// Update box
         /// </summary>
-        public void Update() { }
+        public abstract void Update();
 
         #endregion rUpdate
 
@@ -77,7 +77,7 @@
                 for (slicePos.Y = 0; slicePos.Y < mSizeInSlices.Y; slicePos.Y++)
                 {
                     // Determine slice screen position
-                    Vector2 screenPos = mPosition + (slicePos * SLICE_SIZE);
+                    Vector2 screenPos = (mPosition + slicePos) * SLICE_SIZE;
 
                     // Calculate which slice of sprite is needed
                     Vector2 sourceSlice = Vector2.Zero;
@@ -87,7 +87,7 @@
                     if (slicePos.Y > 0) { sourceSlice.Y = 1; }
                     if (slicePos.Y == mSizeInSlices.Y - 1) { sourceSlice.Y = 2; }
 
-                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), screenPos, sourceSlice * SLICE_SIZE, new Vector2(SLICE_SIZE, SLICE_SIZE), Color.White);
+                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), new Vector2(screenPos.X - 2, screenPos.Y - 2), sourceSlice * SLICE_SIZE, new Vector2(SLICE_SIZE, SLICE_SIZE), Color.White);
                 }
             }
         }
@@ -112,7 +112,7 @@
             int x = (int)Math.Ceiling(mSize.X / SLICE_SIZE);
             int y = (int)Math.Ceiling(mSize.Y / SLICE_SIZE);
 
-            return new Vector2(x + 2, y + 2); // Add two extra patches to allow text centering
+            return new Vector2(x, y); // Add two extra patches to allow text centering
         }
 
 

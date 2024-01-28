@@ -1,37 +1,14 @@
-﻿//namespace Plague_Pilgrim
-//{
-//    internal class TextBox : NineSliceBox
-//    {
-//        #region rMembers
+﻿namespace Plague_Pilgrim
+{
+   internal class TextBox : NineSliceBox
+   {
+       #region rMembers
 
-//        protected bool mActive = true; // Inactive objects are visible but don't take input from player
-//        protected string mCurrentText = string.Empty;
+       protected bool mActive = true; // Inactive objects are visible but don't take input from player
+       protected string mCurrentText = string.Empty;
+       protected int mPadding;
 
-//        #endregion rMembers
-
-
-
-
-
-
-
-//        #region rInitialiastion
-
-//        /// <summary>
-//        /// Text box constructor
-//        /// </summary>
-//        /// <param name="pos">Top left corner position</param>
-//        /// <param name="size">Width and height of box</param>
-//        public TextBox(Vector2 pos, Vector2 size) : base(pos, size)
-//        {
-//            size = GetMinSize(size);
-
-//            mColour = mActive ? Color.White : Color.Gray;
-
-
-//        }
-
-//        #endregion rInitialisation
+       #endregion rMembers
 
 
 
@@ -39,18 +16,24 @@
 
 
 
+       #region rInitialistion
 
-//        #region rUpdate
+       /// <summary>
+       /// Text box constructor
+       /// </summary>
+       /// <param name="pos">Top left corner position</param>
+       /// <param name="size">Width and height of box</param>
+       public TextBox(Vector2 pos, string text, int padding, int width = 0, int height = 0) : base(pos, width, height)
+       {
+           mCurrentText = text;
+           mPadding = padding;
+           mSize = GetMinSize(new Vector2(width, height));
+           mSizeInSlices = GetSizeInSlices();
+          
+           mColour = mActive ? Color.White : Color.Gray;
+       }
 
-//        /// <summary>
-//        /// Update text box
-//        /// </summary>
-//        public override void Update()
-//        {
-//            mColour = mActive ? Color.White : Color.Gray;
-//        }
-
-//        #endregion rUpdate
+       #endregion rInitialisation
 
 
 
@@ -59,78 +42,96 @@
 
 
 
-//        #region rDraw
+       #region rUpdate
 
-//        /// <summary>
-//        /// Draw text box
-//        /// </summary>
-//        /// <param name="info">Info monogame needs to to draw</param>
-//        public override void Draw(DrawInfo info)
-//        {
-//            DrawText(info);
+       /// <summary>
+       /// Update text box
+       /// </summary>
+       public override void Update()
+       {
+           mColour = mActive ? Color.White : Color.Gray;
+       }
 
-//            base.Draw(info);
-//        }
-
-
-//        /// <summary>
-//        /// Draw text
-//        /// </summary>
-//        public virtual void DrawText(DrawInfo info)
-//        {
-//            Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, mPosition, mColour);
-//        }
-
-//        #endregion rDraw
+       #endregion rUpdate
 
 
 
 
 
 
-//        #region  rUtilty
-
-//        /// <summary>
-//        /// Get the number of patches required to display text
-//        /// </summary>
-//        /// <returns>Size of string in patches</returns>
-//        public Vector2 GetTextSize()
-//        {
-//            return FontManager.GetFont("monogram").MeasureString(mCurrentText);
-//        }
 
 
-//        /// <summary>
-//        /// Returns size of text
-//        /// </summary>
-//        /// <returns></returns>
-//        public virtual Vector2 GetMinSize(Vector2 size)
-//        {
-//            int padding = 20;
+       #region rDraw
 
-//            return new Vector2(Math.Max(GetTextSize().X + padding, mSize.X),
-//                               Math.Max(GetTextSize().Y + padding, mSize.Y));
-//        }
-
-
-//        /// <summary>
-//        /// Activate/Deactivate this element. Deactivated elements are visible but do not take input
-//        /// </summary>
-//        public virtual void SetActive(bool active)
-//        {
-//            mActive = active;
-//        }
+       /// <summary>
+       /// Draw text box
+       /// </summary>
+       /// <param name="info">Info monogame needs to to draw</param>
+       public override void Draw(DrawInfo info)
+       {
+            base.Draw(info);
+            DrawText(info);
+       }
 
 
-//        /// <summary>
-//        /// Is this entity avtive?
-//        /// </summary>
-//        /// <returns>True if active</returns>
-//        public virtual bool IsActive()
-//        {
-//            return mActive;
-//        }
+       /// <summary>
+       /// Draw text
+       /// </summary>
+       public virtual void DrawText(DrawInfo info)
+       {
+           Vector2 pos = new Vector2(mPosition.X + mPadding/2, mPosition.Y + mPadding/2);
 
-//        #endregion rUtility
-//    }
-//}
+           Draw2D.DrawString(info, FontManager.GetFont("monogram"), mCurrentText, pos, mColour);
+       }
+
+       #endregion rDraw
+
+
+
+
+
+
+       #region  rUtility
+
+       /// <summary>
+       /// Get the number of patches required to display text
+       /// </summary>
+       /// <returns>Size of string in patches</returns>
+       public Vector2 GetTextSize()
+       {
+           return FontManager.GetFont("monogram").MeasureString(mCurrentText);
+       }
+
+
+       /// <summary>
+       /// Returns size of text
+       /// </summary>
+       /// <returns></returns>
+       public virtual Vector2 GetMinSize(Vector2 size)
+       {
+           return new Vector2(Math.Max(GetTextSize().X + mPadding, size.X),
+                              Math.Max(GetTextSize().Y + mPadding, size.Y));
+       }
+
+
+       /// <summary>
+       /// Activate/Deactivate this element. Deactivated elements are visible but do not take input
+       /// </summary>
+       public virtual void SetActive(bool active)
+       {
+           mActive = active;
+       }
+
+
+       /// <summary>
+       /// Is this entity avtive?
+       /// </summary>
+       /// <returns>True if active</returns>
+       public virtual bool IsActive()
+       {
+           return mActive;
+       }
+
+       #endregion rUtility
+   }
+}

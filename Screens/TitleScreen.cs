@@ -4,7 +4,7 @@
     {
         #region rMembers
 
-        NineSliceBox box = new NineSliceBox(Vector2.Zero, new Vector2(100,100));
+        TextBox box = new TextBox(new Vector2(0,0), "We're going on a journey. Come along and have a fun adventure.",16);
 
         #endregion rMembers
 
@@ -62,11 +62,7 @@
             info.device.SetRenderTarget(mScreenTarget);
             info.device.Clear(Color.CornflowerBlue);
 
-            info.spriteBatch.Begin(SpriteSortMode.FrontToBack,
-                                  BlendState.AlphaBlend,
-                                  SamplerState.PointClamp,
-                                  DepthStencilState.Default,
-                                  RasterizerState.CullNone);
+            info.spriteBatch.Begin();
 
             // TODO: DRAW TITLE SCREEN 
             box.Draw(info);
