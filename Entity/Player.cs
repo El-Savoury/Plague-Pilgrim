@@ -104,28 +104,6 @@
             return direction;
         }
 
-
-        /// <summary>
-        /// Decrease players velocity
-        /// </summary>
-        public override void DecreaseVelocity()
-        {
-             { mVelocity.X = Math.Sign(mVelocity.X) * 2 ; }
-              
-               // mVelocity.Y = Math.Sign(mVelocity.Y) + (mVelocity.Y / 0.4f); 
-
-              if(mVelocity.Y < 0) 
-                {
-                    mVelocity.Y = MathF.Round(mVelocity.Y * 0.6f);
-                }
-               else if(mVelocity.Y > 0) 
-               {
-                mVelocity.Y = MathF.Round(mVelocity.Y * 0.6f);
-                } 
-
-             
-        }
-
         #endregion rUpdate
 
 
@@ -143,13 +121,10 @@
         /// <param name="info">Info needed to draw</param>
         public override void Draw(DrawInfo info)
         {
-            Draw2D.DrawTexture(info, mTexture, mPosition);
+            Draw2D.DrawTexture(info, mTexture, new Vector2(MathF.Round(mPosition.X), MathF.Round(mPosition.Y)));
 
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mVelocity), new Vector2(mPosition.X, mPosition.Y -20), Color.White);
-
-            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mPosition), new Vector2(mPosition.X, mPosition.Y -50), Color.White);
-
-
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mVelocity), new Vector2(mPosition.X, mPosition.Y - 20), Color.White);
+            Draw2D.DrawString(info, FontManager.GetFont("monogram"), Convert.ToString(mPosition), new Vector2(mPosition.X, mPosition.Y - 50), Color.White);
         }
 
         #endregion rDraw

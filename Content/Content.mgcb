@@ -25,6 +25,9 @@
 /processorParam:TextureFormat=Color
 /build:Boats/boat.png
 
+#begin Descriptions/test_file.txt
+/copy:Descriptions/test_file.txt
+
 #begin Fonts/monogram.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -43,6 +46,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Items/crate.png
+
+#begin Names/female_names.txt
+/copy:Names/female_names.txt
+
+#begin Names/male_names.txt
+/copy:Names/male_names.txt
 
 #begin Tiles/empty.png
 /importer:TextureImporter

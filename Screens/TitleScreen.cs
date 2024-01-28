@@ -4,7 +4,7 @@
     {
         #region rMembers
 
-
+        NineSliceBox box = new NineSliceBox(Vector2.Zero, new Vector2(100,100));
 
         #endregion rMembers
 
@@ -69,6 +69,7 @@
                                   RasterizerState.CullNone);
 
             // TODO: DRAW TITLE SCREEN 
+            box.Draw(info);
 
             info.spriteBatch.End();
 

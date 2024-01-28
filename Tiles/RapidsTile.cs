@@ -14,7 +14,7 @@
     {
         #region rConstants
 
-        private const int VELOCITY = 8;
+        private const int PUSH_VELOCITY = 8;
 
         #endregion rConstants
 
@@ -83,16 +83,16 @@
             switch (mDirection)
             {
                 case Direction.Left:
-                    entity.IncreaseVelocity(-VELOCITY, 0);
+                    entity.IncreaseVelocity(-PUSH_VELOCITY, 0);
 
                     break;
 
                 case Direction.Right:
-                    entity.IncreaseVelocity(VELOCITY, 0);
+                    entity.IncreaseVelocity(PUSH_VELOCITY, 0);
                     break;
 
                 case Direction.Down:
-                    entity.IncreaseVelocity(0, VELOCITY);
+                    entity.IncreaseVelocity(0, PUSH_VELOCITY);
                     break;
 
                 default:

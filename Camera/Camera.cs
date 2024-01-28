@@ -1,7 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System.Diagnostics.Tracing;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Options for scaling and ordering

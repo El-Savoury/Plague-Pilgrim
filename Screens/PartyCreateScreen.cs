@@ -1,15 +1,15 @@
 ﻿namespace Plague_Pilgrim
 {
     /// <summary>
-    /// New game menu screen
+    /// Party creation menu screen
     /// </summary>
-    internal class NewGameScreen : Screen
+    internal class PartyCreateScreen: Screen
     {
         #region rMembers
 
         RoleManager mRoleManager;
-        List<UIObject> mNameInputs = new List<UIObject>();
-        List<UIObject> mRoleSelects = new List<UIObject>();
+        List<NineSliceBox> mNameInputs = new List<NineSliceBox>();
+        List<NineSliceBox> mRoleSelects = new List<NineSliceBox>();
 
         #endregion rMembers
 
@@ -24,7 +24,7 @@
         /// Game screen constructor
         /// </summary>
         /// <param name="graphics">Graphics device</param>
-        public NewGameScreen(GraphicsDeviceManager graphics) : base(graphics)
+        public PartyCreateScreen(GraphicsDeviceManager graphics) : base(graphics)
         {
             mRoleManager = new RoleManager();
         }
@@ -36,15 +36,15 @@
         {
             mRoleManager.LoadContent();
 
-            mRoleSelects.Add(new TextSelect(Vector2.Zero, Vector2.Zero, mRoleManager.GetTitles()));
-            mRoleSelects.Add(new TextSelect(new Vector2(0, 50), Vector2.Zero, mRoleManager.GetTitles()));
-            mRoleSelects.Add(new TextSelect(new Vector2(0, 100), Vector2.Zero, mRoleManager.GetTitles()));
-            mRoleSelects.Add(new TextSelect(new Vector2(0, 150), Vector2.Zero, mRoleManager.GetTitles()));
+            //mRoleSelects.Add(new TextSelect(Vector2.Zero, Vector2.Zero, mRoleManager.GetTitles()));
+            //mRoleSelects.Add(new TextSelect(new Vector2(0, 50), Vector2.Zero, mRoleManager.GetTitles()));
+            //mRoleSelects.Add(new TextSelect(new Vector2(0, 100), Vector2.Zero, mRoleManager.GetTitles()));
+            //mRoleSelects.Add(new TextSelect(new Vector2(0, 150), Vector2.Zero, mRoleManager.GetTitles()));
 
-            mNameInputs.Add(new TextInput(new Vector2(120, 0), Vector2.Zero));
-            mNameInputs.Add(new TextInput(new Vector2(120, 50), Vector2.Zero));
-            mNameInputs.Add(new TextInput(new Vector2(120, 100), Vector2.Zero));
-            mNameInputs.Add(new TextInput(new Vector2(120, 150), Vector2.Zero));
+            //mNameInputs.Add(new TextInput(new Vector2(120, 0), Vector2.Zero));
+            //mNameInputs.Add(new TextInput(new Vector2(120, 50), Vector2.Zero));
+            //mNameInputs.Add(new TextInput(new Vector2(120, 100), Vector2.Zero));
+            //mNameInputs.Add(new TextInput(new Vector2(120, 150), Vector2.Zero));
         }
 
         #endregion rInitialisation
@@ -62,12 +62,12 @@
         /// <param name="gameTime">Frame time</param>
         public override void Update(GameTime gameTime)
         {
-            foreach (UIObject role in mRoleSelects)
+            foreach (NineSliceBox role in mRoleSelects)
             {
                 role.Update();
             }
 
-            foreach (UIObject name in mNameInputs)
+            foreach (NineSliceBox name in mNameInputs)
             {
                 name.Update();
             }
@@ -94,17 +94,17 @@
 
             info.spriteBatch.Begin();
 
-            foreach (UIObject role in mRoleSelects)
-            {
-                role.DrawPanel(info);
-                role.Draw(info);
-            }
+            //foreach (NineSliceBox role in mRoleSelects)
+            //{
+            //    role.DrawBox(info);
+            //    role.Draw(info);
+            //}
 
-            foreach (UIObject name in mNameInputs)
-            {
-                name.DrawPanel(info);
-                name.Draw(info);
-            }
+            //foreach (NineSliceBox name in mNameInputs)
+            //{
+            //    name.DrawBox(info);
+            //    name.Draw(info);
+            //}
 
             info.spriteBatch.End();
 

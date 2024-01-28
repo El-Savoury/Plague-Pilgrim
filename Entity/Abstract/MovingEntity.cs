@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
 	/// Entity that can move and collide
@@ -57,12 +55,8 @@ namespace Plague_Pilgrim
         public override void Update(GameTime gameTime)
         {
             TileManager.ResolveEntityTileCollision(gameTime, this);
-           
-            ApplyVelocity(gameTime);
 
-            // Cast position to ints to prevent jerky sub pixel movement
-            mPosition.X = (int)Math.Round(mPosition.X);
-            mPosition.Y = (int)(mPosition.Y);
+            ApplyVelocity(gameTime);
         }
 
 
@@ -117,6 +111,8 @@ namespace Plague_Pilgrim
         /// </summary>
         public virtual void DecreaseVelocity()
         {
+            mVelocity.X = (mVelocity.X * 0.7f);
+            mVelocity.Y = (mVelocity.Y * 0.7f);
         }
 
 
@@ -143,7 +139,12 @@ namespace Plague_Pilgrim
         /// <returns></returns>
         public Vector2 VelocityToDisplacement(GameTime gameTime)
         {
-            return mVelocity * Utility.GetDeltaTime(gameTime);
+            Vector2 vel;
+
+            vel.X = mVelocity.X * Utility.GetDeltaTime(gameTime);
+            vel.Y = mVelocity.Y * Utility.GetDeltaTime(gameTime);
+
+            return vel;
         }
 
 
@@ -168,7 +169,7 @@ namespace Plague_Pilgrim
         /// <summary>
         /// Get direction entity is moving
         /// </summary>
-        /// <returns>Normalised direciton vector</returns>s
+        /// <returns>Normalised direction vector</returns>s
         public Vector2 GetDirection()
         {
             Vector2 nextPos = GetCentre() + mVelocity;

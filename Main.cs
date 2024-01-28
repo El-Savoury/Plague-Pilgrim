@@ -1,8 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Threading;
-
-namespace Plague_Pilgrim
+﻿namespace Plague_Pilgrim
 {
     /// <summary>
     /// Program top level
@@ -18,7 +14,7 @@ namespace Plague_Pilgrim
         #endregion rConstants
 
 
-
+        
 
 
 
@@ -67,8 +63,8 @@ namespace Plague_Pilgrim
         /// </summary>
         protected override void Initialize()
         {
-            mGraphics.PreferredBackBufferWidth = 640;
-            mGraphics.PreferredBackBufferHeight = 360;
+            mGraphics.PreferredBackBufferWidth = 960 ;
+            mGraphics.PreferredBackBufferHeight = 540;
 
             // SetWindowHeight(MIN_WINDOW_HEIGHT);
             mGraphics.IsFullScreen = false;
@@ -97,7 +93,7 @@ namespace Plague_Pilgrim
             InventoryManager.Init();
 
             // Set first screen that opens when game is run
-            ScreenManager.ActivateScreen(ScreenType.Gameplay);
+            ScreenManager.ActivateScreen(ScreenType.Title);
         }
         #endregion rInitialisation
 
