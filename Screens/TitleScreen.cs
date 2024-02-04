@@ -4,7 +4,7 @@
     {
         #region rMembers
 
-        TextBox box = new TextBox(new Vector2(0,0), "We're going on a journey. Come along and have a fun adventure.",16);
+        TextBox box = new TextBox(new Vector2(100,100), "This text box thing is going to be bloody massive", new Vector2(200,200));
 
         #endregion rMembers
 

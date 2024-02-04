@@ -7,7 +7,7 @@
     {
         #region rConstants
 
-        const int SLICE_SIZE = 8;
+        protected const int SLICE_SIZE = 8;
 
         #endregion rConstants
 
@@ -77,7 +77,7 @@
                 for (slicePos.Y = 0; slicePos.Y < mSizeInSlices.Y; slicePos.Y++)
                 {
                     // Determine slice screen position
-                    Vector2 screenPos = (mPosition + slicePos) * SLICE_SIZE;
+                    Vector2 screenPos = mPosition + (slicePos * SLICE_SIZE);
 
                     // Calculate which slice of sprite is needed
                     Vector2 sourceSlice = Vector2.Zero;
@@ -87,7 +87,7 @@
                     if (slicePos.Y > 0) { sourceSlice.Y = 1; }
                     if (slicePos.Y == mSizeInSlices.Y - 1) { sourceSlice.Y = 2; }
 
-                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), new Vector2(screenPos.X - 2, screenPos.Y - 2), sourceSlice * SLICE_SIZE, new Vector2(SLICE_SIZE, SLICE_SIZE), Color.White);
+                    Draw2D.DrawPartialSprite(info, Main.GetContentManager().Load<Texture2D>("UI/border"), new Vector2(screenPos.X, screenPos.Y), sourceSlice * SLICE_SIZE, new Vector2(SLICE_SIZE, SLICE_SIZE), Color.White);
                 }
             }
         }
@@ -112,7 +112,7 @@
             int x = (int)Math.Ceiling(mSize.X / SLICE_SIZE);
             int y = (int)Math.Ceiling(mSize.Y / SLICE_SIZE);
 
-            return new Vector2(x, y); // Add two extra patches to allow text centering
+            return new Vector2(x + 2, y); // Add two extra patches to allow text centering
         }
 
 
